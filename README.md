@@ -1,4 +1,3 @@
-E&M Learning Aid
-Designed to teach concepts in electromagnetics, including Gauss' Law, Poynting vectors, electronic circuits, Lenz' Law, and more
+***E&M Learning Aid***
 
-hi
+Designed to help students visualize concepts in electromagnetism, including electrostatics and Gauss' Law, Ampere's Law and magnetic fields, Induced currents and Lenz's law, Electric circuits/Poynting vectors, and more
