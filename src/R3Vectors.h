@@ -4,6 +4,7 @@ class vectorR3 {
   public:
     double x_component, y_component, z_component;
     vectorR3(double i, double j, double k);
+    vectorR3();
 
     double getMagnitude();
 
@@ -14,4 +15,6 @@ class vectorR3 {
     double dot(const vectorR3& b);
 
     vectorR3 cross(const vectorR3& b);
+
+    vectorR3& operator=(const vectorR3& other);
 };
