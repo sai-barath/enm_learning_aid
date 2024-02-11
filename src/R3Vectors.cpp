@@ -1,6 +1,5 @@
 #include <cmath>
 #include "R3Vectors.h"
-#include "math.h"
 
 vectorR3::vectorR3(double i, double j, double k) {
     x_component = i;
