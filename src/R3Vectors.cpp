@@ -14,7 +14,7 @@ vectorR3::vectorR3() {
 }
 
 double vectorR3::getMagnitude() {
-    return (sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
+    return (std::sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
 }
 
 vectorR3 vectorR3::add(const vectorR3& b) {
@@ -48,4 +48,22 @@ vectorR3& vectorR3::operator=(const vectorR3& a) {
         this->z_component = a.z_component;
     }
     return *this;
+}
+
+bool vectorR3::operator==(const vectorR3& other) {
+    return (std::abs(this->x_component - other.x_component) < TOL) &&
+        (std::abs(this->y_component - other.y_component) < TOL) &&
+        (std::abs(this->z_component - other.z_component) < TOL);
+}
+
+vectorR3 vectorR3::operator+(const vectorR3& other) {
+    return vectorR3(this->x_component + other.x_component, this->y_component + other.y_component, this->z_component + other.z_component);
+}
+
+vectorR3 vectorR3::operator-(const vectorR3& other) {
+    return vectorR3(this->x_component - other.x_component, this->y_component - other.y_component, this->z_component - other.z_component);
+}
+
+double vectorR3::magsquared() {
+    return (this->x_component * this->x_component) + (this->y_component) + (this->z_component);
 }
