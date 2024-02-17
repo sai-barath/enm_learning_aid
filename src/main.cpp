@@ -11,5 +11,10 @@ int main() {
                 win.close();
             }
         }
+        win.clear(sf::Color::White);
+        sf::CircleShape circ(10.0f);
+        circ.setFillColor(sf::Color::Blue);
+        win.draw(circ);
+        win.display();
     }
 }
