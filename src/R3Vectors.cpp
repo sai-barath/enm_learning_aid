@@ -5,10 +5,16 @@ vectorR3::vectorR3(double i, double j, double k) {
     x_component = i;
     y_component = j;
     z_component = k;
-};
+}
+
+vectorR3::vectorR3() {
+    x_component = 0.0;
+    y_component = 0.0;
+    z_component = 0.0;
+}
 
 double vectorR3::getMagnitude() {
-    return (sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
+    return (std::sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
 }
 
 vectorR3 vectorR3::add(const vectorR3& b) {
@@ -33,4 +39,31 @@ vectorR3 vectorR3::cross(const vectorR3& b) {
         -((this->x_component * b.z_component) - (this->z_component * b.x_component)),
         ((this->x_component * b.y_component) - (this->y_component * b.x_component)));
     return cross_product;
+}
+
+vectorR3& vectorR3::operator=(const vectorR3& a) {
+    if(this != &a) {
+        this->x_component = a.x_component;
+        this->y_component = a.y_component;
+        this->z_component = a.z_component;
+    }
+    return *this;
+}
+
+bool vectorR3::operator==(const vectorR3& other) {
+    return (std::abs(this->x_component - other.x_component) < TOL) &&
+        (std::abs(this->y_component - other.y_component) < TOL) &&
+        (std::abs(this->z_component - other.z_component) < TOL);
+}
+
+vectorR3 vectorR3::operator+(const vectorR3& other) {
+    return vectorR3(this->x_component + other.x_component, this->y_component + other.y_component, this->z_component + other.z_component);
+}
+
+vectorR3 vectorR3::operator-(const vectorR3& other) {
+    return vectorR3(this->x_component - other.x_component, this->y_component - other.y_component, this->z_component - other.z_component);
+}
+
+double vectorR3::magsquared() {
+    return (this->x_component * this->x_component) + (this->y_component) + (this->z_component);
 }
