@@ -16,7 +16,6 @@ vectorR3 PointCharge::efield(const vectorR3& loc) {
     vectorR3 dir = this->pos - loc;
     double magdirection = dir.getMagnitude();
     double mag = (this->charge) / (4.0 * PI * EP0 * magdirection * magdirection);
-    // TODO: REPLACE WITH *=
-    dir = dir.scalar_multiply(mag / magdirection);
+    dir *= (mag / magdirection);
     return dir;
 }

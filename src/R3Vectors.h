@@ -30,6 +30,12 @@ class vectorR3 {
     vectorR3 operator+(const vectorR3& other);
 
     vectorR3 operator-(const vectorR3& other);
+    
+    vectorR3 operator*(const double& scalar);
+
+    double operator*(const vectorR3& other);
+
+    void operator*=(const double& scalar);
 
     double magsquared();
 };

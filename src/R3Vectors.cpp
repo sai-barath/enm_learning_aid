@@ -67,3 +67,19 @@ vectorR3 vectorR3::operator-(const vectorR3& other) {
 double vectorR3::magsquared() {
     return (this->x_component * this->x_component) + (this->y_component) + (this->z_component);
 }
+
+vectorR3 vectorR3::operator*(const double& scalar) {
+    // Overloaded operator * for scalar multiplication
+    return vectorR3(this->x_component * scalar, this->y_component * scalar, this->z_component * scalar);
+}
+
+double vectorR3::operator*(const vectorR3& other) {
+    // Overloaded operator * for dot product
+    return (this->x_component * other.x_component) + (this->y_component * other.y_component) + (this->z_component * other.z_component);
+}
+
+void vectorR3::operator*=(const double& scalar) {
+    this->x_component *= scalar;
+    this->y_component *= scalar;
+    this->z_component *= scalar;
+}
