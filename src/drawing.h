@@ -5,6 +5,7 @@
 
 class Artist {
     //Draws vectors
-    void drawvector(sf::RenderWindow& win, const vectorR3& start, const vectorR3& vec);
+    public:
+        void drawvector(sf::RenderWindow& win, const vectorR3& start, const vectorR3& vec);
     //Check both vectors have z component 9
 };
