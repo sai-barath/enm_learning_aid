@@ -14,12 +14,9 @@ int main() {
             }
         }
         win.clear(sf::Color::White);
-        vectorR3 vec1 (100, 100, 9);
-        vectorR3 vec2 (500, 500, 9);
-
-        Artist test;
-        test.drawvector(win, vec1, vec2);
-
+        vectorR3 vec1 (100, 100, 0);
+        vectorR3 vec2 (100, 100, 0);
+        draw::drawvector(win, vec1, vec2);
         win.display();
     }
 }
