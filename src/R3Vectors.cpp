@@ -28,6 +28,18 @@ vectorR3 vectorR3::scalar_multiply(double c) {
     return scalar_multiple;
 }
 
+double vectorR3::scalar_project(const vectorR3& b) {
+    //Computes the scalar projection for b onto a
+    return (dot(b)/(getMagnitude()));
+}
+
+vectorR3 vectorR3::vector_project(const vectorR3& b) {
+    //Computes the vector projection for b onto a 
+    vectorR3 vector_project(scalar_project(b)*this->x_component/getMagnitude(), scalar_project(b)*this->y_component/getMagnitude()
+    , scalar_project(b)*this->z_component/getMagnitude());
+    return vector_project;
+}
+
 double vectorR3::dot(const vectorR3& b) {
     // Computes the scalar product of vectorR3 objects a and b
     return (this->x_component*b.x_component + this->y_component*b.y_component + this->z_component*b.z_component);
