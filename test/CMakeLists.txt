@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.16)
+project(test_enm)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include(FetchContent)
+FetchContent_Declare(googletest URL https://github.com/google/googletest/archive/4c676b94b8ec284f20337862829412aab7e7927f.zip)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+enable_testing()
+include_directories(.././src)
+add_executable(test_enm testing.cpp .././src/point_charge.cpp .././src/R3Vectors.cpp)
+target_link_libraries(test_enm GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(test_enm)
+
+# The guide at https://google.github.io/googletest/quickstart-cmake.html was used to help set up this file
