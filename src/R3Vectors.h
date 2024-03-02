@@ -19,7 +19,11 @@ class vectorR3 {
 
     vectorR3 scalar_multiply(double c);
 
-    double dot(const vectorR3& b);
+    double scalar_project(const vectorR3& b);
+
+    vectorR3 vectorR3::vector_project(const vectorR3 &b);
+
+    double dot(const vectorR3 &b);
 
     vectorR3 cross(const vectorR3& b);
 
