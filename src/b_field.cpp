@@ -20,10 +20,8 @@ vectorR3 B_Field_Vector::compute_B_field(double x, double y, double z) {
     /*Given the x, y, and z components of the point, calculates the B-field vector at
      that point by ampere's law*/
 
-    double magIDir = direction.getMagnitude();
     vectorR3 pos = vectorR3(x, y, z);
-    vectorR3 R = direction * (direction.dot(pos) / (magIDir*magIDir));
-    R = R - pos; // Vector pointing from the point charge to the wire, normal to the wire
+    vectorR3 R = direction.vector_project(pos) - pos; // Vector pointing from the position to the wire, normal to the wire
 
     vectorR3 B = R.cross(direction);
     B = B / B.getMagnitude(); //unit vector in direction of magnetic field
