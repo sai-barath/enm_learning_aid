@@ -14,8 +14,9 @@ int main() {
             }
         }
         win.clear(sf::Color::White);
-        vectorR3 vec1 (100, 100, 0);
-        vectorR3 vec2 (100, 100, 0);
+
+        vectorR3 vec1 (200, 200, 0);
+        vectorR3 vec2 (100, 135, 0);
         draw::drawvector(win, vec1, vec2);
         win.display();
     }
