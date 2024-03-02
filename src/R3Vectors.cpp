@@ -28,6 +28,16 @@ vectorR3 vectorR3::scalar_multiply(double c) {
     return scalar_multiple;
 }
 
+double vectorR3::scalar_project(const vectorR3 &b) {
+    // Computes the scalar projection for b onto a
+    return (this->dot(b) / (this->getMagnitude()));
+}
+
+vectorR3 vectorR3::vector_project(const vectorR3 &b) {
+    // computes the vector projection for b onto a
+    return *this * (this->dot(b) / this->magsquared());
+}
+
 double vectorR3::dot(const vectorR3& b) {
     // Computes the scalar product of vectorR3 objects a and b
     return (this->x_component*b.x_component + this->y_component*b.y_component + this->z_component*b.z_component);
@@ -71,6 +81,11 @@ double vectorR3::magsquared() {
 vectorR3 vectorR3::operator*(const double& scalar) {
     // Overloaded operator * for scalar multiplication
     return vectorR3(this->x_component * scalar, this->y_component * scalar, this->z_component * scalar);
+}
+
+vectorR3 vectorR3::operator/(const double &scalar) {
+    // Overloaded operator / for scalar division
+    return vectorR3(this->x_component / scalar, this->y_component / scalar, this->z_component / scalar);
 }
 
 double vectorR3::operator*(const vectorR3& other) {
