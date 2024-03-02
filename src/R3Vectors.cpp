@@ -73,6 +73,11 @@ vectorR3 vectorR3::operator*(const double& scalar) {
     return vectorR3(this->x_component * scalar, this->y_component * scalar, this->z_component * scalar);
 }
 
+vectorR3 vectorR3::operator/(const double &scalar) {
+    // Overloaded operator / for scalar division
+    return vectorR3(this->x_component / scalar, this->y_component / scalar, this->z_component / scalar);
+}
+
 double vectorR3::operator*(const vectorR3& other) {
     // Overloaded operator * for dot product
     return (this->x_component * other.x_component) + (this->y_component * other.y_component) + (this->z_component * other.z_component);

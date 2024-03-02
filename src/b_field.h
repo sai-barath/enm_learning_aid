@@ -9,6 +9,6 @@ class B_Field_Vector {
   public:
     B_Field_Vector::B_Field_Vector(double vx, double vy, double curr);
     B_Field_Vector::B_Field_Vector(const vectorR3 &v, double curr);
-    vectorR3 B_Field_Vector::compute_B_field();
+    vectorR3 B_Field_Vector::compute_B_field(double x, double y, double z);
 
 };
