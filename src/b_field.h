@@ -20,7 +20,7 @@ class B_Field_Vector {
      * @param vy The y direction of the wire, pointing in the direciton of the current
      * @param curr The current in the wire measured in amperes
      */
-    B_Field_Vector::B_Field_Vector(double vx, double vy, double curr);
+    B_Field_Vector(double vx, double vy, double curr);
 
     /**
      * Instantiate an infinite wire
@@ -28,7 +28,7 @@ class B_Field_Vector {
      * @param v The direction of the wire, pointing in the direction of the current
      * @param curr The current in the wire measured in amperes
      */
-    B_Field_Vector::B_Field_Vector(const vectorR3 &v, double curr);
+    B_Field_Vector(const vectorR3 &v, double curr);
 
     /**
      * Find the magnetic field at the given location
@@ -38,6 +38,6 @@ class B_Field_Vector {
      * @param z The z coordinate of the location
      * @return The magnetic field vector at the given position
      */
-    vectorR3 B_Field_Vector::compute_B_field(double x, double y, double z);
+    vectorR3 compute_B_field(double x, double y, double z);
 
 };
