@@ -83,7 +83,7 @@ class vectorR3 {
      * @param b the vector to project onto this vector.
      * @return The result of the vector projection.
     */
-    vectorR3 vectorR3::vector_project(const vectorR3 &b);
+    vectorR3 vector_project(const vectorR3 &b);
 
     /**
      * Performs a basic dot product of this vector and the given vector.
