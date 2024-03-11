@@ -54,8 +54,8 @@ TEST(efieldtest, efield) {
     EXPECT_EQ(e2.y_component, 0.0);
     EXPECT_EQ(e2.z_component, 0.0);
     vectorR3 e3 = c2.efield(vectorR3(1.0, 1.0, 1.0));
-    EXPECT_EQ(e2.x_component, -(ke / std::sqrtf(3.0)));
-    EXPECT_EQ(e2.y_component, -(ke / std::sqrtf(3.0)));
-    EXPECT_EQ(e2.z_component, -(ke / std::sqrtf(3.0)));
+    EXPECT_EQ(e2.x_component, -(ke / std::sqrt(3.0)));
+    EXPECT_EQ(e2.y_component, -(ke / std::sqrt(3.0)));
+    EXPECT_EQ(e2.z_component, -(ke / std::sqrt(3.0)));
 }
 
