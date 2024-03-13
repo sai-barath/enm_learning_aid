@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "R3Vectors.h"
 #include "drawing.h"
+#include "point_charge.h"
+
 
 int main() {
     //int x1, x2, y1, y2;
@@ -25,5 +27,7 @@ int main() {
         vectorR3 vec2 (0, 100, 0);
         draw::drawvector(win, vec1, vec2);
         win.display();
+        PointCharge pc(vec1, 5.0);
+        draw::drawcharge(win, pc);
     }
 }
