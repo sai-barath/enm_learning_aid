@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "R3Vectors.h"
 #include "drawing.h"
+#include "point_charge.h"
 #include <cmath>
 #include <iostream>
 
@@ -40,3 +41,32 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     win.draw(line,2 , sf::Lines);
     win.draw(triangle);
 }
+
+/*void drawcharge(sf::RenderWindow& win, const PointCharge& pc) {
+    sf::CircleShape charge(20);
+    charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
+    if(pc.charge <= 0.0) {
+        charge.setFillColor(sf::Color::Blue);
+        sf::Vertex line[] =
+        {
+        sf::Vertex(sf::Vector2f(pc.pos.x_component - 15, win.getSize().y - pc.pos.y_component), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 15, win.getSize().y - pc.pos.y_component), sf::Color::White)
+        };
+        win.draw(line, 2 ,sf::Lines);
+    } else {
+        charge.setFillColor(sf::Color::Red);
+        sf::Vertex line1[] =
+        {
+        sf::Vertex(sf::Vector2f(pc.pos.x_component - 15, win.getSize().y - pc.pos.y_component), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 15, win.getSize().y - pc.pos.y_component), sf::Color::White)
+        };
+        sf::Vertex line2[] =
+        {
+        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component  + 15), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component - 15), sf::Color::White)
+        };
+        win.draw(line1, 2 ,sf::Lines);
+        win.draw(line2, 2 ,sf::Lines);
+    }
+    win.draw(charge);
+} */
