@@ -42,7 +42,7 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     win.draw(triangle);
 }
 
-void drawcharge(sf::RenderWindow& win, const PointCharge& pc) {
+void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     sf::CircleShape charge(20);
     charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
     if(pc.charge <= 0.0) {
