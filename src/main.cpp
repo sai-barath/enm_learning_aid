@@ -20,14 +20,14 @@ int main() {
         }
         win.clear(sf::Color::White); 
         vectorR3 vec1 (200, 200, 0);
-        vectorR3 vec2 (0, 100, 0);
-        draw::drawvector(win, vec1, vec2);
-        PointCharge pc(vec1, 5.0);
-        draw::drawc(win, pc);
-        /*sf::CircleShape charge(20);
-        charge.setPosition(200, 150);
-        charge.setFillColor(sf::Color::Blue);
-        win.draw(charge);*/
+        vectorR3 vec2 (300, 200, 0);
+        PointCharge pc1(vec1, 5.0);
+        PointCharge pc2(vec2, -5.0);
+        
+        //draw::drawvector(win, vec1, vec2);
+        draw::drawc(win, pc1);
+        draw::drawc(win, pc2);
+
         win.display();
     }
 }

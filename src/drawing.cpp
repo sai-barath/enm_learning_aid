@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 
+
 void draw::transformpt(vectorR3& vec, int windowy) {
     vec.y_component = (windowy - vec.y_component);
 }
@@ -43,30 +44,43 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
 }
 
 void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
+    // Sets up the circle
     sf::CircleShape charge(20);
-    charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
+    charge.setPosition(pc.pos.x_component, pc.pos.y_component);
+
+    // Charge is negative
     if(pc.charge <= 0.0) {
-        charge.setFillColor(sf::Color::Blue);
-        sf::Vertex line[] =
+        // Changes charge to be blue
+        charge.setFillColor(sf::Color::Blue); 
+        win.draw(charge);
+
+        // Sets up the white lines
+        sf::Vertex horizontal[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component - 15, win.getSize().y - pc.pos.y_component), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 15, win.getSize().y - pc.pos.y_component), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 5, pc.pos.y_component + 20), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 35, pc.pos.y_component + 20), sf::Color::White)
         };
-        win.draw(line, 2 ,sf::Lines);
-    } else {
+        win.draw(horizontal, 2 ,sf::Lines);
+    } 
+
+    // Charge is positive
+    else {
+        // Changes charge to red
         charge.setFillColor(sf::Color::Red);
-        sf::Vertex line1[] =
+        win.draw(charge);
+
+        // Sets up the white lines
+        sf::Vertex horizontal[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component - 15, win.getSize().y - pc.pos.y_component), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 15, win.getSize().y - pc.pos.y_component), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 5, pc.pos.y_component + 20), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 35, pc.pos.y_component + 20), sf::Color::White)
         };
-        sf::Vertex line2[] =
+        sf::Vertex vertical[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component  + 15), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component - 15), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 20, pc.pos.y_component + 5), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 20, pc.pos.y_component + 35), sf::Color::White)
         };
-        win.draw(line1, 2 ,sf::Lines);
-        win.draw(line2, 2 ,sf::Lines);
-    }
-    win.draw(charge);
+        win.draw(horizontal, 2 ,sf::Lines);
+        win.draw(vertical, 2 ,sf::Lines);
+    } 
 }
