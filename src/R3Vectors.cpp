@@ -60,7 +60,7 @@ vectorR3& vectorR3::operator=(const vectorR3& a) {
     return *this;
 }
 
-bool vectorR3::operator==(const vectorR3& other) {
+bool vectorR3::operator==(const vectorR3& other) const {
     return (std::abs(this->x_component - other.x_component) < TOL) &&
         (std::abs(this->y_component - other.y_component) < TOL) &&
         (std::abs(this->z_component - other.z_component) < TOL);

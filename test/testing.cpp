@@ -83,3 +83,28 @@ TEST(efieldtest, efield_multcomp) {
     EXPECT_EQ(e4.z_component > 0, 1);
 }
 
+TEST(bfieldtest, one_dimension) {
+    B_Field_Vector wire(1, 0, 100); //100 amps along x axis
+
+    //1 mm away
+    vectorR3 b1 = wire.compute_B_field(0, 0, 0.001);
+    vectorR3 b2 = wire.compute_B_field(0, 0.001, 0);
+    vectorR3 B1(0, -0.02, 0);
+    vectorR3 B2(0, 0, 0.02);
+
+    EXPECT_EQ(B1, b1);
+    EXPECT_EQ(B2, b2);
+}
+
+TEST(bfieldtest, two_dimensions) {
+    B_Field_Vector wire(1, 0, 100); // 100 amps along x axis
+
+    // 5 mm away
+    vectorR3 b3 = wire.compute_B_field(0, 0.003, 0.004);
+    vectorR3 B3(0, -0.0032, 0.0024);
+
+    //account for overflow
+    EXPECT_NEAR(B3.x_component, b3.x_component, 0.0000001);
+    EXPECT_NEAR(B3.y_component, b3.y_component, 0.0000001);
+    EXPECT_NEAR(B3.z_component, b3.z_component, 0.0000001);
+}

@@ -115,7 +115,7 @@ class vectorR3 {
      * @param other The other vector with which to make the comparison.
      * @return A boolean value signifying whether the two vectors are equal.
      */
-    bool operator==(const vectorR3& other);
+    bool operator==(const vectorR3& other) const;
 
     /**
      * Find the sum of this vector and another vector.
