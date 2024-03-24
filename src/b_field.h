@@ -6,7 +6,7 @@
  * 
  * Can be used to model the magnetic field at any point around the wire
  */
-class Long_Thin_wire {
+class Long_Thin_Wire {
 
   private:
     double current; // Current through the wire in amperes
@@ -20,7 +20,7 @@ class Long_Thin_wire {
      * @param vy The y direction of the wire, pointing in the direciton of the current
      * @param curr The current in the wire measured in amperes
      */
-    Long_Thin_wire(double vx, double vy, double curr);
+    Long_Thin_Wire(double vx, double vy, double curr);
 
     /**
      * Instantiate an infinite wire
@@ -28,7 +28,7 @@ class Long_Thin_wire {
      * @param v The direction of the wire, pointing in the direction of the current
      * @param curr The current in the wire measured in amperes
      */
-    Long_Thin_wire(const vectorR3 &v, double curr);
+    Long_Thin_Wire(const vectorR3 &v, double curr);
 
     /**
      * Find the magnetic field at the given location
