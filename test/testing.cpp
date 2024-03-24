@@ -84,7 +84,7 @@ TEST(efieldtest, efield_multcomp) {
 }
 
 TEST(bfieldtest, one_dimension) {
-    B_Field_Vector wire(1, 0, 100); //100 amps along x axis
+    Long_Thin_Wire wire(1, 0, 100); //100 amps along x axis
 
     //1 mm away
     vectorR3 b1 = wire.compute_B_field(0, 0, 0.001);
@@ -97,7 +97,7 @@ TEST(bfieldtest, one_dimension) {
 }
 
 TEST(bfieldtest, two_dimensions) {
-    B_Field_Vector wire(1, 0, 100); // 100 amps along x axis
+    Long_Thin_Wire wire(1, 0, 100); // 100 amps along x axis
 
     // 5 mm away
     vectorR3 b3 = wire.compute_B_field(0, 0.003, 0.004);
