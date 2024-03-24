@@ -1,16 +1,16 @@
 #include "B_Field.h"
 #include "R3Vectors.h"
 
-B_Field_Vector::B_Field_Vector(double vx, double vy, double curr) {
+Long_Thin_wire::Long_Thin_wire(double vx, double vy, double curr) {
     current = curr;
     this->direction = vectorR3(vx, vy, 0.0);
 }
 
-B_Field_Vector::B_Field_Vector(const vectorR3 &v, double curr) {
+Long_Thin_wire::Long_Thin_wire(const vectorR3 &v, double curr) {
     this->direction = v;
 }
 
-vectorR3 B_Field_Vector::compute_B_field(double x, double y, double z) {
+vectorR3 Long_Thin_wire::compute_B_field(double x, double y, double z) {
     vectorR3 pos = vectorR3(x, y, z);
     vectorR3 R = direction.vector_project(pos) - pos; // Vector pointing from the position to the wire, normal to the wire
 
