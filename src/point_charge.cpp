@@ -4,9 +4,7 @@
 
 PointCharge::PointCharge(const vectorR3& p, double c) {
     this->charge = c;
-    this->pos.x_component = p.x_component;
-    this->pos.y_component = p.y_component;
-    this->pos.y_component = p.z_component;
+    this->pos = p;
 }
 
 PointCharge::PointCharge(double x, double y, double z, double c) {
