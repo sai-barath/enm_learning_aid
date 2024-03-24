@@ -20,13 +20,13 @@ int main() {
         }
         win.clear(sf::Color::White); 
         vectorR3 vec1 (200, 200, 0);
-        vectorR3 vec2 (300, 200, 0);
+        vectorR3 vec2 (-100, 100, 0);
         PointCharge pc1(vec1, 5.0);
         PointCharge pc2(vec2, -5.0);
         
-        //draw::drawvector(win, vec1, vec2);
-        draw::drawc(win, pc1);
-        draw::drawc(win, pc2);
+        draw::drawvector(win, vec1, vec2);
+        //draw::drawc(win, pc1);
+        //draw::drawc(win, pc2);
 
         win.display();
     }

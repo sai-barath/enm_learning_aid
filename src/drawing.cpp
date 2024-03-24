@@ -20,7 +20,7 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
         //Error handling
     }*/
 
-    int triangleSize = 4;
+    int triangleSize = 10;
     draw::transformpt(start, win.getSize().y);
     draw::transformvec(vec, win.getSize().y);
 
@@ -35,6 +35,7 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     int angle = atan(vec.y_component/vec.x_component) * (180/PI);
     sf::CircleShape triangle(triangleSize, 3);
     triangle.setFillColor(sf::Color::Black);
+    triangle.setOrigin(10,10);
     triangle.setPosition(start.x_component + vec.x_component, start.y_component + vec.y_component);
     triangle.rotate(angle+90);
 
