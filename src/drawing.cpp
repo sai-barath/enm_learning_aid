@@ -32,7 +32,10 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     };
 
     // Triangle stuff
-    int angle = atan(vec.y_component/vec.x_component) * (180/PI);
+    double angle = atan(vec.y_component/vec.x_component) * (180/PI);
+    if(vec.x_component < 0.0) {
+        angle += 180.0;
+    }
     sf::CircleShape triangle(triangleSize, 3);
     triangle.setFillColor(sf::Color::Black);
     triangle.setOrigin(10,10);
@@ -84,4 +87,22 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
         win.draw(horizontal, 2 ,sf::Lines);
         win.draw(vertical, 2 ,sf::Lines);
     } 
+}
+
+void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc) {
+    int numx = win.getSize().x / 100;
+    int numy = win.getSize().y / 100;
+    for(int i = 0; i < numc; i++) {
+        draw::drawc(win, charges[i]);
+    }
+    for(int i = 0; i < numx; i++) {
+        for(int j = 0; j < numy; j++) {
+            vectorR3 pos(i * 100, j * 100, 0);
+            vectorR3 efieldatpos;
+            for(int k = 0; k < numc; k++) {
+                efieldatpos += charges[i].efield(pos);
+            }
+            draw::drawvector(win, pos, efieldatpos);
+        }
+    }
 }

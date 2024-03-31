@@ -18,15 +18,32 @@ int main() {
                 win.close();
             }
         }
-        win.clear(sf::Color::White); 
+        /*win.clear(sf::Color::White); 
         vectorR3 vec1 (200, 200, 0);
+        vectorR3 vec10(400, 400, 0);
         vectorR3 vec2 (-100, 100, 0);
+        vectorR3 vec3(100, 100, 0);
+        vectorR3 vec4(-100, -100, 0);
+        vectorR3 vec5(100,-100, 0);
+        vectorR3 vec6(100, 0, 0);
+        vectorR3 vec7(-100, 0, 0);
+        vectorR3 vec8(0, 100, 0);
+        vectorR3 vec9(0, -100, 0);
+        vectorR3 vec11(200, 100, 0);
         PointCharge pc1(vec1, 5.0);
-        PointCharge pc2(vec2, -5.0);
+        PointCharge pc2(vec10, -5.0);
         
         draw::drawvector(win, vec1, vec2);
-        //draw::drawc(win, pc1);
-        //draw::drawc(win, pc2);
+        draw::drawvector(win, vec1, vec3);
+        draw::drawvector(win, vec1, vec4);
+        draw::drawvector(win, vec1, vec5);
+        draw::drawvector(win, vec1, vec6);
+        draw::drawvector(win, vec1, vec7);
+        draw::drawvector(win, vec1, vec8);
+        draw::drawvector(win, vec1, vec9);
+        draw::drawvector(win, vec1, vec11);
+        draw::drawc(win, pc1);
+        draw::drawc(win, pc2);*/
 
         win.display();
     }

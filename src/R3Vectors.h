@@ -167,4 +167,11 @@ class vectorR3 {
      * @param scalar The scalar quantity by which to multiply the vector.
      */
     void operator*=(const double& scalar);
+
+    /**
+     * Adds other vector to this vector
+     *
+     * @param other The other vector
+     */
+    void operator+=(const vectorR3& other);
 };
