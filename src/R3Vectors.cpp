@@ -98,3 +98,9 @@ void vectorR3::operator*=(const double& scalar) {
     this->y_component *= scalar;
     this->z_component *= scalar;
 }
+
+void vectorR3::operator+=(const vectorR3& other) {
+    this->x_component += other.x_component;
+    this->y_component += other.y_component;
+    this->z_component += other.z_component;
+}

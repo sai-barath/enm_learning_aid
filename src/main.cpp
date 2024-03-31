@@ -7,13 +7,7 @@
 
 
 int main() {
-    //int x1, x2, y1, y2;
-    //std::cout << "enter the cords" << std::endl;
-    //std::cin >> x1 >> x2 >> y1 >> y2;
-
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 4;
-    sf::RenderWindow win(sf::VideoMode(800, 600), "E&M Learning Aid", sf::Style::Default, settings);
+    sf::RenderWindow win(sf::VideoMode(800, 600), "E&M Learning Aid");
     while (win.isOpen()) {
         sf::Event e;
         while (win.pollEvent(e)) {
@@ -21,13 +15,11 @@ int main() {
                 win.close();
             }
         }
-        win.clear(sf::Color::White);
-        
-        vectorR3 vec1 (200, 200, 0);
-        vectorR3 vec2 (0, 100, 0);
-        draw::drawvector(win, vec1, vec2);
+        win.clear(sf::Color::White); 
+        PointCharge c1(100.0, 400.0, 0.0, 0.00003);
+        PointCharge c2(700.0, 400.0, 0.0, -0.00003);
+        PointCharge charges[] = {c1, c2};
+        draw::drawefield(win, charges, 2);
         win.display();
-        PointCharge pc(vec1, 5.0);
-        draw::drawcharge(win, pc);
     }
 }
