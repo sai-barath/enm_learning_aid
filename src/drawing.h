@@ -10,5 +10,5 @@ namespace draw {
     void transformvec(vectorR3& vec, int windowy);
     void drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec); //Check both vectors have z component 0
     void drawc(sf::RenderWindow& win, const PointCharge& pc);
-    void drawefield(sf::RenderWindow& win, PointCharge* charges, int numc);
+    void drawefield(sf::RenderWindow& win, PointCharge* charges, int numc, bool debug);
 };

@@ -89,7 +89,7 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     } 
 }
 
-void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc) {
+void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc, bool debug) {
     int numx = win.getSize().x / 100;
     int numy = win.getSize().y / 100;
     for(int i = 0; i < numc; i++) {
@@ -98,11 +98,16 @@ void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc) {
     for(int i = 0; i < numx; i++) {
         for(int j = 0; j < numy; j++) {
             vectorR3 pos(i * 100, j * 100, 0);
-            vectorR3 efieldatpos;
-            for(int k = 0; k < numc; k++) {
+            vectorR3 efieldatpos = charges[0].efield(pos);
+            /*for(int k = 0; k < numc; k++) {
                 efieldatpos += charges[i].efield(pos);
-            }
+            }*/
             draw::drawvector(win, pos, efieldatpos);
+            /*vectorR3 distance = pos - charges[i].pos;
+            if(debug) {
+                std::cout << "Distance: " << distance.getMagnitude() << ", field: " << efieldatpos.getMagnitude() << std::endl;
+                if(efieldatpos.getMagnitude() > )
+            }*/
         }
     }
 }
