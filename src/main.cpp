@@ -6,17 +6,19 @@
 #include "point_charge.h"
 
 void debug() {
+    double a = -999.0, b = -999.0;
+    //std::cin >> a >> b;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
     int i = 0;
-    win.clear(sf::Color::White);
     while (win.isOpen()) {
+        win.clear(sf::Color::White);
         sf::Event e;
         while (win.pollEvent(e)) {
             if (e.type == sf::Event::Closed) {
                 win.close();
             }
         }
-        PointCharge c1(87.0, 360.0, 0.0, 0.00003);
+        PointCharge c1(340.3, 234.1, 0.0, 0.00003);
         PointCharge c2(707.0, 400.0, 0.0, -0.00003);
         PointCharge charges[] = {c1};
         if(i == 0) {

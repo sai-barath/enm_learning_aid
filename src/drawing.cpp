@@ -51,7 +51,7 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     // Sets up the circle
     sf::CircleShape charge(20);
     charge.setOrigin(20, 20);
-    charge.setPosition(pc.pos.x_component, pc.pos.y_component);
+    charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
     // Charge is negative
     if(pc.charge <= 0.0) {
         // Changes charge to be blue
@@ -61,8 +61,8 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
         // Sets up the white lines
         sf::Vertex horizontal[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, pc.pos.y_component), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, pc.pos.y_component), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, win.getSize().y - pc.pos.y_component), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, win.getSize().y - pc.pos.y_component), sf::Color::White)
         };
         win.draw(horizontal, 2 ,sf::Lines);
     } 
@@ -76,13 +76,13 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
         // Sets up the white lines
         sf::Vertex horizontal[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, pc.pos.y_component), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, pc.pos.y_component), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, win.getSize().y - pc.pos.y_component), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, win.getSize().y - pc.pos.y_component), sf::Color::White)
         };
         sf::Vertex vertical[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component, pc.pos.y_component + 7), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component, pc.pos.y_component - 7), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component + 7), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component - 7), sf::Color::White)
         };
         win.draw(horizontal, 2 ,sf::Lines);
         win.draw(vertical, 2 ,sf::Lines);
