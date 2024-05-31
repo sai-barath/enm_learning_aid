@@ -50,8 +50,8 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
 void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     // Sets up the circle
     sf::CircleShape charge(20);
+    charge.setOrigin(20, 20);
     charge.setPosition(pc.pos.x_component, pc.pos.y_component);
-
     // Charge is negative
     if(pc.charge <= 0.0) {
         // Changes charge to be blue
@@ -61,8 +61,8 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
         // Sets up the white lines
         sf::Vertex horizontal[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 5, pc.pos.y_component + 20), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 35, pc.pos.y_component + 20), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, pc.pos.y_component), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, pc.pos.y_component), sf::Color::White)
         };
         win.draw(horizontal, 2 ,sf::Lines);
     } 
@@ -76,13 +76,13 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
         // Sets up the white lines
         sf::Vertex horizontal[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 5, pc.pos.y_component + 20), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 35, pc.pos.y_component + 20), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, pc.pos.y_component), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, pc.pos.y_component), sf::Color::White)
         };
         sf::Vertex vertical[] =
         {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 20, pc.pos.y_component + 5), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 20, pc.pos.y_component + 35), sf::Color::White)
+        sf::Vertex(sf::Vector2f(pc.pos.x_component, pc.pos.y_component + 7), sf::Color::White),
+        sf::Vertex(sf::Vector2f(pc.pos.x_component, pc.pos.y_component - 7), sf::Color::White)
         };
         win.draw(horizontal, 2 ,sf::Lines);
         win.draw(vertical, 2 ,sf::Lines);
@@ -90,6 +90,7 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
 }
 
 void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc, bool debug) {
+    // Maybe each charge's actual location is its top left: CONFIRMED
     int numx = win.getSize().x / 100;
     int numy = win.getSize().y / 100;
     for(int i = 0; i < numc; i++) {
