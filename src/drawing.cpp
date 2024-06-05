@@ -5,6 +5,7 @@
 #include "point_charge.h"
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 
 void draw::transformpt(vectorR3& vec, int windowy) {
@@ -89,10 +90,10 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     } 
 }
 
-void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc, bool debug) {
-    // Maybe each charge's actual location is its top left: CONFIRMED
+void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge> charges, bool debug) {
     int numx = win.getSize().x / 100;
     int numy = win.getSize().y / 100;
+    int numc = charges.size();
     for(int i = 0; i < numc; i++) {
         draw::drawc(win, charges[i]);
     }
@@ -100,15 +101,13 @@ void draw::drawefield(sf::RenderWindow& win, PointCharge* charges, int numc, boo
         for(int j = 0; j < numy; j++) {
             vectorR3 pos(i * 100, j * 100, 0);
             vectorR3 efieldatpos = charges[0].efield(pos);
-            /*for(int k = 0; k < numc; k++) {
-                efieldatpos += charges[i].efield(pos);
-            }*/
+            for(int k = 1; k < numc; k++) {
+                efieldatpos += charges[k].efield(pos);
+            }
             draw::drawvector(win, pos, efieldatpos);
-            /*vectorR3 distance = pos - charges[i].pos;
             if(debug) {
-                std::cout << "Distance: " << distance.getMagnitude() << ", field: " << efieldatpos.getMagnitude() << std::endl;
-                if(efieldatpos.getMagnitude() > )
-            }*/
+                std::cout << "Pos: (" << pos.x_component << ", " << pos.y_component << ", " << pos.z_component << "), Field: (" << efieldatpos.x_component << ", " << efieldatpos.y_component << ", " << efieldatpos.z_component << ")" << std::endl;
+            }
         }
     }
 }

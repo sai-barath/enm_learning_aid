@@ -4,6 +4,7 @@
 #include "R3Vectors.h"
 #include "drawing.h"
 #include "point_charge.h"
+#include <vector>
 
 void debug() {
     double a = -999.0, b = -999.0;
@@ -20,13 +21,14 @@ void debug() {
         }
         PointCharge c1(340.3, 234.1, 0.0, 0.00003);
         PointCharge c2(707.0, 400.0, 0.0, -0.00003);
-        PointCharge charges[] = {c1};
+        std::vector<PointCharge> charges = {c1, c2};
         if(i == 0) {
-            draw::drawefield(win, charges, 1, 1);
+            draw::drawefield(win, charges, 1);
         } else {
-            draw::drawefield(win, charges, 1, 0);
+            draw::drawefield(win, charges, 0);
         }
         win.display();
+        i++;
     }
 }
 
