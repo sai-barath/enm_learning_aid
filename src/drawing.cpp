@@ -90,7 +90,7 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     } 
 }
 
-void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge> charges, bool debug) {
+void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges, bool debug) {
     int numx = win.getSize().x / 100;
     int numy = win.getSize().y / 100;
     int numc = charges.size();
