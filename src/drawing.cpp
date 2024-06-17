@@ -24,24 +24,27 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     int triangleSize = 10;
     draw::transformpt(start, win.getSize().y);
     draw::transformvec(vec, win.getSize().y);
-
-    //Draws the line
+    if(vec.magsquared() > 6400) {
+        vec *= (80 / vec.getMagnitude());
+    } else if(vec.magsquared() < 100) {
+        vec *= (10 / vec.getMagnitude());
+    }
     sf::Vertex line[] =
     {
         sf::Vertex(sf::Vector2f(start.x_component, start.y_component), sf::Color::Black),
         sf::Vertex(sf::Vector2f(start.x_component + vec.x_component, start.y_component + vec.y_component), sf::Color::Black)
     };
 
-    // Triangle stuff
-    double angle = atan(vec.y_component/vec.x_component) * (180/PI);
+    // Rotating the arrow
+    double angle = atan(vec.y_component/vec.x_component) * (180 / PI);
     if(vec.x_component < 0.0) {
         angle += 180.0;
     }
     sf::CircleShape triangle(triangleSize, 3);
     triangle.setFillColor(sf::Color::Black);
-    triangle.setOrigin(10,10);
+    triangle.setOrigin(10, 10);
     triangle.setPosition(start.x_component + vec.x_component, start.y_component + vec.y_component);
-    triangle.rotate(angle+90);
+    triangle.rotate(angle + 90);
 
     // Drawing the shapes into the screen
     win.draw(line,2 , sf::Lines);
@@ -50,32 +53,28 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
 
 void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
     // Sets up the circle
-    sf::CircleShape charge(20);
-    charge.setOrigin(20, 20);
+    /*sf::CircleShape charge(20);
+    charge.setOrigin(20, 20);*/
+    sf::CircleShape charge(8);
+    charge.setOrigin(8, 8);
     charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
     // Charge is negative
     if(pc.charge <= 0.0) {
         // Changes charge to be blue
         charge.setFillColor(sf::Color::Blue); 
-        win.draw(charge);
-
         // Sets up the white lines
-        sf::Vertex horizontal[] =
+        /*sf::Vertex horizontal[] =
         {
         sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, win.getSize().y - pc.pos.y_component), sf::Color::White),
         sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, win.getSize().y - pc.pos.y_component), sf::Color::White)
         };
-        win.draw(horizontal, 2 ,sf::Lines);
-    } 
-
-    // Charge is positive
-    else {
+        win.draw(horizontal, 2 ,sf::Lines);*/
+        win.draw(charge);
+    } else {
         // Changes charge to red
         charge.setFillColor(sf::Color::Red);
-        win.draw(charge);
-
         // Sets up the white lines
-        sf::Vertex horizontal[] =
+        /*sf::Vertex horizontal[] =
         {
         sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, win.getSize().y - pc.pos.y_component), sf::Color::White),
         sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, win.getSize().y - pc.pos.y_component), sf::Color::White)
@@ -86,8 +85,10 @@ void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
         sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component - 7), sf::Color::White)
         };
         win.draw(horizontal, 2 ,sf::Lines);
-        win.draw(vertical, 2 ,sf::Lines);
+        win.draw(vertical, 2 ,sf::Lines);*/
+        win.draw(charge);
     } 
+   
 }
 
 void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges, bool debug) {
@@ -97,9 +98,9 @@ void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges, 
     for(int i = 0; i < numc; i++) {
         draw::drawc(win, charges[i]);
     }
-    for(int i = 0; i < numx; i++) {
-        for(int j = 0; j < numy; j++) {
-            vectorR3 pos(i * 100, j * 100, 0);
+    for(int i = 0; i <= numx; i++) {
+        for(int j = 0; j <= numy; j++) {
+            vectorR3 pos((i * 100) + 20, (j * 100) + 20, 0);
             vectorR3 efieldatpos = charges[0].efield(pos);
             for(int k = 1; k < numc; k++) {
                 efieldatpos += charges[k].efield(pos);
