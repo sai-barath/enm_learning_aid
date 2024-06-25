@@ -26,6 +26,9 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     draw::transformvec(vec, win.getSize().y);
     if(vec.magsquared() > 6400) {
         vec *= (80 / vec.getMagnitude());
+        if(start.x_component == 1020 && start.y_component == 420) {
+            std::cout << vec.getMagnitude() << std::endl;
+        }
     } else if(vec.magsquared() < 100) {
         vec *= (10 / vec.getMagnitude());
     }
@@ -51,11 +54,13 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     win.draw(triangle);
 }
 
-void draw::drawc(sf::RenderWindow& win, const PointCharge& pc) {
+void draw::drawc(sf::RenderWindow& win, PointCharge& pc) {
     // Sets up the circle
     /*sf::CircleShape charge(20);
     charge.setOrigin(20, 20);*/
     sf::CircleShape charge(8);
+    pc.pos.x_component = std::floor(pc.pos.x_component / 100) * 100;
+    pc.pos.y_component = std::floor(pc.pos.y_component / 100) * 100;
     charge.setOrigin(8, 8);
     charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
     // Charge is negative
@@ -107,7 +112,7 @@ void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges, 
             }
             draw::drawvector(win, pos, efieldatpos);
             if(debug) {
-                std::cout << "Pos: (" << pos.x_component << ", " << pos.y_component << ", " << pos.z_component << "), Field: (" << efieldatpos.x_component << ", " << efieldatpos.y_component << ", " << efieldatpos.z_component << ")" << std::endl;
+                //std::cout << "Pos: (" << pos.x_component << ", " << pos.y_component << ", " << pos.z_component << "), Field: (" << efieldatpos.x_component << ", " << efieldatpos.y_component << ", " << efieldatpos.z_component << ")" << std::endl;
             }
         }
     }
