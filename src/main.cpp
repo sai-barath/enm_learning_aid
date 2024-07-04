@@ -22,7 +22,7 @@ void pointcharges() {
     }
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
     int i = 0;
-    std::cout << "Units used are meters, coulombs, and newtons" << i + 1 << std::endl;
+    std::cout << "Units used are meters, coulombs, and newtons, chages around the order of magnitude of 10^-4 work best " << std::endl;
     while (win.isOpen()) {
         win.clear(sf::Color::White);
         sf::Event e;
