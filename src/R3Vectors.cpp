@@ -13,6 +13,12 @@ vectorR3::vectorR3() {
     z_component = 0.0;
 }
 
+vectorR3::vectorR3(const vectorR3& other) {
+    this->x_component = other.x_component;
+    this->y_component = other.y_component;
+    this->z_component = other.z_component;
+}
+
 double vectorR3::getMagnitude() {
     return (std::sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
 }

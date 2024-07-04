@@ -29,6 +29,8 @@ class vectorR3 {
      * Instantiates the vector <0.0, 0.0, 0.0>.
     */
     vectorR3();
+    
+    vectorR3(const vectorR3& other);
 
     /**
      * Calculate the magnitude of the vector.
