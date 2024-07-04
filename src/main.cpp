@@ -42,12 +42,12 @@ void pointcharges() {
 }
 
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Debug" << std::endl << "(2) Point charges" << std::endl; 
+    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl; 
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
-        debug();
-    } else if(choice == 2) {
         pointcharges();
+    } else {
+        return 1;
     }
 }
