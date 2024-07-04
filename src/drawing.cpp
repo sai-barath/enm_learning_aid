@@ -26,7 +26,7 @@ void draw::drawvector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     draw::transformvec(vec, win.getSize().y);
     if(vec.magsquared() > 6400) {
         vec *= (80 / vec.getMagnitude());
-        std::cout << "scaling at: " << start.x_component << ", " << start.y_component << std::endl; 
+        //std::cout << "scaling at: " << start.x_component << ", " << start.y_component << std::endl; 
     } else if(vec.magsquared() < 100) {
         vec *= (10 / vec.getMagnitude());
     }
@@ -94,7 +94,7 @@ void draw::drawc(sf::RenderWindow& win, PointCharge& pc) {
    
 }
 
-void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges, bool debug) {
+void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges) {
     int numc = charges.size();
     for(int i = 0; i < numc; i++) {
         draw::drawc(win, charges[i]);
@@ -115,9 +115,9 @@ void draw::drawefield(sf::RenderWindow& win, std::vector<PointCharge>& charges, 
                 efieldatpos += charges[k].efield(board[i][j]);
             }
             draw::drawvector(win, board[i][j], efieldatpos);
-            if(debug) {
+            /*if(debug) {
                 std::cout << "Pos: (" << board[i][j].x_component << ", " << board[i][j].y_component << ", " << board[i][j].z_component << "), Field: (" << efieldatpos.x_component << ", " << efieldatpos.y_component << ", " << efieldatpos.z_component << ") " << "Mag: " << efieldatpos.getMagnitude() << std::endl;
-            }
+            }*/
         }
     }
 }
