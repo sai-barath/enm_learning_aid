@@ -1,9 +1,9 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "R3Vectors.h"
-#include "drawing.h"
-#include "point_charge.h"
+#include "vectorR3.hpp"
+#include "drawing.hpp"
+#include "pointCharge.hpp"
 #include <vector>
 
 
