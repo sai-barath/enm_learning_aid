@@ -38,7 +38,7 @@ class vectorR3 {
      * 
      * @return The magnitude of the vector.
     */
-    double getMagnitude();
+    double magnitude();
 
     /**
      * Calculate the squared magnitude of the vector.
@@ -48,7 +48,7 @@ class vectorR3 {
      * 
      * @return The magnitude of the vector squared.
     */
-    double magsquared();
+    double magSquared();
 
     /**
      * Find the sum vector b and this vector.
@@ -66,7 +66,7 @@ class vectorR3 {
      * @param c The scalar quantity by which to multiply the vector.
      * @return The scalar multiple of the vector.
     */
-    vectorR3 scalar_multiply(double c);
+    vectorR3 scalarMultiply(double c);
 
     /**
      * Performs a basic scalar projection.
@@ -76,7 +76,7 @@ class vectorR3 {
      * @param b The vector to project onto this vector.
      * @return The result of the scalar projection.
     */
-    double scalar_project(const vectorR3& b);
+    double scalarProject(const vectorR3& b);
 
     /**
      * Performs a basic vector projection.
@@ -86,7 +86,7 @@ class vectorR3 {
      * @param b the vector to project onto this vector.
      * @return The result of the vector projection.
     */
-    vectorR3 vector_project(const vectorR3 &b);
+    vectorR3 vectorProject(const vectorR3 &b);
 
     /**
      * Performs a basic dot product of this vector and the given vector.
@@ -197,7 +197,7 @@ vectorR3::vectorR3(const vectorR3& other) {
     this->z_component = other.z_component;
 }
 
-double vectorR3::getMagnitude() {
+double vectorR3::magnitude() {
     return (std::sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
 }
 
@@ -207,19 +207,19 @@ vectorR3 vectorR3::add(const vectorR3& b) {
     return vector_sum;
 }
 
-vectorR3 vectorR3::scalar_multiply(double c) {
+vectorR3 vectorR3::scalarMultiply(double c) {
     vectorR3 scalar_multiple(this->x_component * c, this->y_component * c, this->z_component * c);
     return scalar_multiple;
 }
 
-double vectorR3::scalar_project(const vectorR3 &b) {
+double vectorR3::scalarProject(const vectorR3 &b) {
     // Computes the scalar projection for b onto a
-    return (this->dot(b) / (this->getMagnitude()));
+    return (this->dot(b) / (this->magnitude()));
 }
 
-vectorR3 vectorR3::vector_project(const vectorR3 &b) {
+vectorR3 vectorR3::vectorProject(const vectorR3 &b) {
     // computes the vector projection for b onto a
-    return *this * (this->dot(b) / this->magsquared());
+    return *this * (this->dot(b) / this->magSquared());
 }
 
 double vectorR3::dot(const vectorR3& b) {
@@ -258,7 +258,7 @@ vectorR3 vectorR3::operator-(const vectorR3& other) {
     return vectorR3(this->x_component - other.x_component, this->y_component - other.y_component, this->z_component - other.z_component);
 }
 
-double vectorR3::magsquared() {
+double vectorR3::magSquared() {
     return (this->x_component * this->x_component) + (this->y_component) + (this->z_component);
 }
 
