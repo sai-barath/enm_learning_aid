@@ -1,24 +1,24 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "R3Vectors.h"
-#include "drawing.h"
-#include "point_charge.h"
+#include "vectorR3.hpp"
+#include "drawing.hpp"
+#include "pointCharge.hpp"
 #include <vector>
 
 
-void pointcharges() {
+void pointCharges() {
     std::cout << "Enter num charges (must be > 0)" << std::endl;
     int numc = -1;
     while(numc <= 0) {
         std::cin >> numc;
     }
-    std::vector<PointCharge> charges;
+    std::vector<pointCharge> charges;
     for(int i = 0; i < numc; i++) {
         double x = 0.0, y = 0.0, c = 0.0;
         std::cout << "Enter x y charge (space separated) for charge #" << i + 1 << std::endl;
         std::cin >> x >> y >> c;
-        charges.push_back(PointCharge(x, y, 0.0, c));
+        charges.push_back(pointCharge(x, y, 0.0, c));
     }
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
     int i = 0;
@@ -32,9 +32,9 @@ void pointcharges() {
             }
         }
         if(i == 0) {
-            draw::drawefield(win, charges);
+            draw::drawElecField(win, charges);
         } else {
-            draw::drawefield(win, charges);
+            draw::drawElecField(win, charges);
         }
         win.display();
         i++;
@@ -46,7 +46,7 @@ int main() {
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
-        pointcharges();
+        pointCharges();
     } else {
         return 1;
     }
