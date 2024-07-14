@@ -10,25 +10,16 @@
 
 
 namespace draw {
-    void transformpt(vectorR3& vec, int windowy); // from our coordinates to SFML's
-    void transformvec(vectorR3& vec, int windowy);
-    void drawVector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec); //Check both vectors have z component 0
+    void drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect); //Check both vectors have z component 0
     void drawCharge(sf::RenderWindow& win, pointCharge& pc);
     void drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charges);
 };
 
-void draw::transformpt(vectorR3& vec, int windowy) {
-    vec.y_component = (windowy - vec.y_component);
-}
 
-void draw::transformvec(vectorR3& vec, int windowy) {
-    vec.y_component *= -1;
-}
-
-void draw::drawVector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
+void draw::drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect) {
     int triangleSize = 10;
-    draw::transformpt(start, win.getSize().y);
-    draw::transformvec(vec, win.getSize().y);
+    vectorR3 start(begin.x_component, win.getSize().y - begin.y_component, 0);
+    vectorR3 vec(vect.x_component, -vect.y_component, 0);
     if(vec.magSquared() > 6400) {
         vec *= (80 / vec.magnitude());
         //std::cout << "scaling at: " << start.x_component << ", " << start.y_component << std::endl; 
