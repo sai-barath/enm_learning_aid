@@ -10,29 +10,16 @@
 
 
 namespace draw {
-    void transformpt(vectorR3& vec, int windowy); // from our coordinates to SFML's
-    void transformvec(vectorR3& vec, int windowy);
-    void drawVector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec); //Check both vectors have z component 0
+    void drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect); //Check both vectors have z component 0
     void drawCharge(sf::RenderWindow& win, pointCharge& pc);
     void drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charges);
 };
 
-void draw::transformpt(vectorR3& vec, int windowy) {
-    vec.y_component = (windowy - vec.y_component);
-}
 
-void draw::transformvec(vectorR3& vec, int windowy) {
-    vec.y_component *= -1;
-}
-
-void draw::drawVector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
-    /*if (start.z_component != 0 || vec.z_component != 0) {
-        //Error handling
-    }*/
-
+void draw::drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect) {
     int triangleSize = 10;
-    draw::transformpt(start, win.getSize().y);
-    draw::transformvec(vec, win.getSize().y);
+    vectorR3 start(begin.x_component, win.getSize().y - begin.y_component, 0);
+    vectorR3 vec(vect.x_component, -vect.y_component, 0);
     if(vec.magSquared() > 6400) {
         vec *= (80 / vec.magnitude());
         //std::cout << "scaling at: " << start.x_component << ", " << start.y_component << std::endl; 
@@ -46,7 +33,14 @@ void draw::drawVector(sf::RenderWindow &win, vectorR3 start, vectorR3 vec) {
     };
 
     // Rotating the arrow
-    double angle = atan(vec.y_component/vec.x_component) * (180 / PI);
+    double angle = 0.0;
+    if(vec.x_component != 0.0) {
+        angle = atan(vec.y_component / vec.x_component) * (180 / PI);
+    } else if(vec.x_component == 0 && vec.y_component < 0) {
+        angle = 270;
+    } else if(vec.x_component == 0 && vec.y_component > 0) {
+        angle = 90;
+    }
     if(vec.x_component < 0.0) {
         angle += 180.0;
     }
@@ -111,11 +105,17 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
     int numx = (win.getSize().x / 100) + 1;
     int numy = (win.getSize().y / 100) + 1;
     vectorR3** board = new vectorR3*[numx];
+    bool** isChargePresent = new bool*[numx];
     for(int i = 0; i < numx; i++) {
         board[i] = new vectorR3[numy];
+        isChargePresent[i] = new bool[numy];
         for(int j = 0; j < numy; j++) {
             board[i][j] = vectorR3(i * 100, j * 100, 0);
+            isChargePresent[i][j] = 0;
         }
+    }
+    for(int k = 0; k < charges.size(); k++) {
+        isChargePresent[(int) charges[k].pos.x_component / 100][(int) charges[k].pos.y_component / 100] = 1;
     }
     for(int i = 0; i < numx; i++) {
         for(int j = 0; j < numy; j++) {
@@ -123,10 +123,19 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
             for(int k = 1; k < numc; k++) {
                 efieldatpos += charges[k].efield(board[i][j]);
             }
-            draw::drawVector(win, board[i][j], efieldatpos);
+            if(!isChargePresent[i][j]) {
+                draw::drawVector(win, board[i][j], efieldatpos);
+            }
             /*if(debug) {
                 std::cout << "Pos: (" << board[i][j].x_component << ", " << board[i][j].y_component << ", " << board[i][j].z_component << "), Field: (" << efieldatpos.x_component << ", " << efieldatpos.y_component << ", " << efieldatpos.z_component << ") " << "Mag: " << efieldatpos.magnitude() << std::endl;
             }*/
         }
     }
+    // std::cout << charges[0].efield(board[6][3]).y_component << " " << charges[0].efield(board[6][3]).x_component << std::endl;
+    for(int i = 0; i < numx; i++) {
+        delete[] board[i];
+        delete[] isChargePresent[i];
+    }
+    delete[] board;
+    delete[] isChargePresent;
 }
