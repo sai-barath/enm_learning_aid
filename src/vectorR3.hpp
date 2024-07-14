@@ -259,7 +259,7 @@ vectorR3 vectorR3::operator-(const vectorR3& other) {
 }
 
 double vectorR3::magSquared() {
-    return (this->x_component * this->x_component) + (this->y_component) + (this->z_component);
+    return (this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component);
 }
 
 vectorR3 vectorR3::operator*(const double& scalar) {
