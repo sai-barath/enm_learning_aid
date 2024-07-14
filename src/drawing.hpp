@@ -10,8 +10,9 @@
 
 
 namespace draw {
-    void drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect); //Check both vectors have z component 0
+    void drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect);
     void drawCharge(sf::RenderWindow& win, pointCharge& pc);
+    void intoOut(sf::RenderWindow& win, const vectorR3& where, const vectorR3& vec);
     void drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charges);
 };
 
@@ -95,6 +96,49 @@ void draw::drawCharge(sf::RenderWindow& win, pointCharge& pc) {
         win.draw(charge);
     } 
    
+}
+
+void draw::intoOut(sf::RenderWindow& win, const vectorR3& where, const vectorR3& vec) {
+    double zComp = vec.z_component;
+    if(zComp < 0.0) {
+        if(zComp < -48.0) {
+            zComp = -48.0;
+        } else if(zComp > -5.0) {
+            zComp = -5.0;
+        }
+    } else if(zComp >= 0) {
+        if(zComp < 5.0) {
+            zComp = 5.0;
+        } else if(zComp > 48.0) {
+            zComp = 48.0;
+        }
+    }
+    sf::CircleShape sym(zComp);
+    sym.setOrigin(zComp, zComp);
+    sym.setFillColor(sf::Color::White);
+    sym.setPosition(where.x_component, win.getSize().y - where.y_component);
+    sym.setOutlineThickness(2);
+    sym.setOutlineColor(sf::Color::Black);
+    if(vec.z_component < 0.0) {
+        double lineLen = zComp / SQRT2;
+        sf::Vertex line1[] = {
+            sf::Vertex(sf::Vector2f(where.x_component - lineLen, win.getSize().y - where.y_component + lineLen), sf::Color::Black),
+            sf::Vertex(sf::Vector2f(where.x_component + lineLen, win.getSize().y - where.y_component - lineLen), sf::Color::Black)
+        };
+        sf::Vertex line2[] = {
+            sf::Vertex(sf::Vector2f(where.x_component + lineLen, win.getSize().y - where.y_component - lineLen), sf::Color::Black),
+            sf::Vertex(sf::Vector2f(where.x_component - lineLen, win.getSize().y - where.y_component + lineLen), sf::Color::Black)
+        };
+        win.draw(line1, 2, sf::Lines);
+        win.draw(line2, 2, sf::Lines);
+    } else {
+        sf::CircleShape dot(zComp / 10.0);
+        dot.setOrigin(zComp / 10.0, zComp / 10.0);
+        dot.setPosition(where.x_component, win.getSize().y - where.y_component);
+        dot.setFillColor(sf::Color::Black);
+        win.draw(dot);
+    }
+    win.draw(sym);
 }
 
 void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charges) {

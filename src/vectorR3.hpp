@@ -5,6 +5,8 @@ const double TOL = 1e-5; // TODO
 const double EP0 = 8.8542E-12; // Vacuum permittivity constant (C^2/(N*m^2))
 const double MU0 = 1.2566E-6; // Vacuum permeability constant ((T*m)/A)
 const double PI = 3.14159; // The first six digits of pi.
+const double SQRT2 = 1.41421356237;
+const double E = 2.718281828459;
 
 /**
  * A generic implementation of vectors.
