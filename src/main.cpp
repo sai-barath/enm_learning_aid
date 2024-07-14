@@ -61,7 +61,7 @@ void debug() {
 }
 
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) Debug" << std:endl; 
+    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) Debug" << std::endl; 
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
