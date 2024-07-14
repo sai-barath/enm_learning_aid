@@ -41,12 +41,33 @@ void pointCharges() {
     }
 }
 
+void debug() {
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
+    while (win.isOpen()) {
+        win.clear(sf::Color::White);
+        sf::Event e;
+        while (win.pollEvent(e)) {
+            if (e.type == sf::Event::Closed) {
+                win.close();
+            }
+        }
+        vectorR3 where(500, 500, 0);
+        vectorR3 into(0, 0, -33);
+        vectorR3 out(0, 0, 33);
+        draw::intoOut(win, where, into);
+        draw::intoOut(win, where, out);
+        win.display();
+    }
+}
+
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl; 
+    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) Debug" << std:endl; 
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
         pointCharges();
+    } else if(choice == 2) {
+        debug();
     } else {
         return 1;
     }
