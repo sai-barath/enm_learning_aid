@@ -23,7 +23,6 @@ void draw::drawVector(sf::RenderWindow &win, const vectorR3& begin, const vector
     vectorR3 vec(vect.x_component, -vect.y_component, 0);
     if(vec.magSquared() > 6400) {
         vec *= (80 / vec.magnitude());
-        //std::cout << "scaling at: " << start.x_component << ", " << start.y_component << std::endl; 
     } else if(vec.magSquared() < 100) {
         vec *= (10 / vec.magnitude());
     }
@@ -50,49 +49,21 @@ void draw::drawVector(sf::RenderWindow &win, const vectorR3& begin, const vector
     triangle.setOrigin(10, 10);
     triangle.setPosition(start.x_component + vec.x_component, start.y_component + vec.y_component);
     triangle.rotate(angle + 90);
-
-    // Drawing the shapes into the screen
     win.draw(line,2 , sf::Lines);
     win.draw(triangle);
 }
 
 void draw::drawCharge(sf::RenderWindow& win, pointCharge& pc) {
-    // Sets up the circle
-    /*sf::CircleShape charge(20);
-    charge.setOrigin(20, 20);*/
     sf::CircleShape charge(8);
     pc.pos.x_component = std::floor(pc.pos.x_component / 100) * 100;
     pc.pos.y_component = std::floor(pc.pos.y_component / 100) * 100;
     charge.setOrigin(8, 8);
     charge.setPosition(pc.pos.x_component, win.getSize().y - pc.pos.y_component);
-    // Charge is negative
     if(pc.charge <= 0.0) {
-        // Changes charge to be blue
         charge.setFillColor(sf::Color::Blue); 
-        // Sets up the white lines
-        /*sf::Vertex horizontal[] =
-        {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, win.getSize().y - pc.pos.y_component), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, win.getSize().y - pc.pos.y_component), sf::Color::White)
-        };
-        win.draw(horizontal, 2 ,sf::Lines);*/
         win.draw(charge);
     } else {
-        // Changes charge to red
         charge.setFillColor(sf::Color::Red);
-        // Sets up the white lines
-        /*sf::Vertex horizontal[] =
-        {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component - 7, win.getSize().y - pc.pos.y_component), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component + 7, win.getSize().y - pc.pos.y_component), sf::Color::White)
-        };
-        sf::Vertex vertical[] =
-        {
-        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component + 7), sf::Color::White),
-        sf::Vertex(sf::Vector2f(pc.pos.x_component, win.getSize().y - pc.pos.y_component - 7), sf::Color::White)
-        };
-        win.draw(horizontal, 2 ,sf::Lines);
-        win.draw(vertical, 2 ,sf::Lines);*/
         win.draw(charge);
     } 
    
@@ -162,12 +133,8 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
             if(!isChargePresent[i][j]) {
                 draw::drawVector(win, board[i][j], efieldatpos);
             }
-            /*if(debug) {
-                std::cout << "Pos: (" << board[i][j].x_component << ", " << board[i][j].y_component << ", " << board[i][j].z_component << "), Field: (" << efieldatpos.x_component << ", " << efieldatpos.y_component << ", " << efieldatpos.z_component << ") " << "Mag: " << efieldatpos.magnitude() << std::endl;
-            }*/
         }
     }
-    // std::cout << charges[0].efield(board[6][3]).y_component << " " << charges[0].efield(board[6][3]).x_component << std::endl;
     for(int i = 0; i < numx; i++) {
         delete[] board[i];
         delete[] isChargePresent[i];
