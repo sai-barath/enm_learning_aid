@@ -52,10 +52,11 @@ void debug() {
             }
         }
         vectorR3 where(500, 500, 0);
+        vectorR3 where2(500, 600, 0);
         vectorR3 into(0, 0, -33);
         vectorR3 out(0, 0, 33);
         draw::intoOut(win, where, into);
-        draw::intoOut(win, where, out);
+        draw::intoOut(win, where2, out);
         win.display();
     }
 }
