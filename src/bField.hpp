@@ -33,12 +33,10 @@ class longThinWire {
     /**
      * Find the magnetic field at the given location
      *
-     * @param x The x coordinate of the location
-     * @param y The y coordinate of the location
-     * @param z The z coordinate of the location
+     * @param pos the position
      * @return The magnetic field vector at the given position
      */
-    vectorR3 compute_B_field(double x, double y, double z);
+    vectorR3 computeBField(const vectorR3& pos);
 
 };
 
@@ -51,10 +49,8 @@ longThinWire::longThinWire(const vectorR3 &v, double curr) {
     this->direction = v;
 }
 
-vectorR3 longThinWire::compute_B_field(double x, double y, double z) {
-    vectorR3 pos = vectorR3(x, y, z);
+vectorR3 longThinWire::computeBField(const vectorR3& pos) {
     vectorR3 R = direction.vectorProject(pos) - pos; // Vector pointing from the position to the wire, normal to the wire
-
     vectorR3 B = R.cross(direction);
     B = B / B.magnitude(); //unit vector in direction of magnetic field
     B = B * MU0 * current / (2 * PI * R.magnitude());
