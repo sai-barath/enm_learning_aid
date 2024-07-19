@@ -52,8 +52,9 @@ void drawB() {
                 win.close();
             }
         }
-        longThinWire wir(3.0, 4.0, 2.0);
+        longThinWire wir(10.0, 4.0, 2.0);
         draw::drawBField(win, wir);
+        win.display();
     }
 }
 

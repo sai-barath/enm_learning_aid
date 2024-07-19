@@ -48,7 +48,7 @@ void draw::drawVector(sf::RenderWindow &win, const vectorR3& begin, const vector
     }
     sf::CircleShape triangle(triangleSize, 3);
     triangle.setFillColor(sf::Color::Black);
-    triangle.setOrigin(10, 10);
+    triangle.setOrigin(triangleSize, triangleSize);
     triangle.setPosition(start.xComponent + vec.xComponent, start.yComponent + vec.yComponent);
     triangle.rotate(angle + 90);
     win.draw(line,2 , sf::Lines);
@@ -147,14 +147,29 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
 
 void draw::drawBField(sf::RenderWindow& win, const longThinWire& wir) {
     double slopeFactor = win.getSize().y / win.getSize().x;
-    if((wir.direction.yComponent / wir.direction.xComponent) > slopeFactor) {
-        sf::Vertex wire[] = {
-            sf::Vertex(sf::Vector2f(0, win.getSize().y), sf::Color::Black),
-            sf::Vertex(sf::Vector2f(win.getSize().x, (wir.direction.yComponent / wir.direction.xComponent) * win.getSize().x), sf::Color::Black)
-        };
-        win.draw(wire, 2, sf::Lines);
+    double slope = wir.direction.yComponent / wir.direction.xComponent;
+    double angle = atan(slope) * (180 / PI);
+    double maxX = -1.0;
+    double maxY = -1.0;
+    if(slope > slopeFactor) {
+        maxX = win.getSize().y / slope;
+        maxY = 0;
     } else {
-
+        maxX = win.getSize().x;
+        maxY = slope * win.getSize().x;
     }
-    
+    sf::Vertex wire[] = {
+        sf::Vertex(sf::Vector2f(0, win.getSize().y), sf::Color::Black),
+        sf::Vertex(sf::Vector2f(maxX, maxY), sf::Color::Black)
+    };
+    double triangleSize = 10.0;
+    for(double xPos = 0.0; xPos < maxX; xPos += (maxX / 5)) {
+        sf::CircleShape triangle(triangleSize, 3);
+        triangle.setFillColor(sf::Color::Black);
+        triangle.setOrigin(triangleSize, triangleSize);
+        triangle.setPosition(xPos, win.getSize().y - (slope * xPos));
+        triangle.rotate(angle - 90);
+        win.draw(triangle);
+    }
+    win.draw(wire, 2, sf::Lines);
 }
