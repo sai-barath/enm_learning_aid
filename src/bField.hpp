@@ -10,9 +10,8 @@ class longThinWire {
 
   private:
     double current; // Current through the wire in amperes
-    vectorR3 direction; // The direction of the current in the infinite wire
-
   public:
+    vectorR3 direction; // The direction of the current in the infinite wire
     /**
      * Instantiate an infinite wire
      *

@@ -15,9 +15,9 @@ const double E = 2.718281828459;
 */
 class vectorR3 { 
   public:
-    double x_component; // x component of the vector
-    double y_component; // y component of the vector
-    double z_component; // z component of the vector
+    double xComponent; // x component of the vector
+    double yComponent; // y component of the vector
+    double zComponent; // z component of the vector
 
     /**
      * Instantiates a vector.
@@ -182,35 +182,35 @@ class vectorR3 {
 };
 
 vectorR3::vectorR3(double i, double j, double k) {
-    x_component = i;
-    y_component = j;
-    z_component = k;
+    xComponent = i;
+    yComponent = j;
+    zComponent = k;
 }
 
 vectorR3::vectorR3() {
-    x_component = 0.0;
-    y_component = 0.0;
-    z_component = 0.0;
+    xComponent = 0.0;
+    yComponent = 0.0;
+    zComponent = 0.0;
 }
 
 vectorR3::vectorR3(const vectorR3& other) {
-    this->x_component = other.x_component;
-    this->y_component = other.y_component;
-    this->z_component = other.z_component;
+    this->xComponent = other.xComponent;
+    this->yComponent = other.yComponent;
+    this->zComponent = other.zComponent;
 }
 
 double vectorR3::magnitude() {
-    return (std::sqrt((this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component)));
+    return (std::sqrt((this->xComponent * this->xComponent) + (this->yComponent * this->yComponent) + (this->zComponent * this->zComponent)));
 }
 
 vectorR3 vectorR3::add(const vectorR3& b) {
     // Computes the vector sum of a and b and returns a vectorR3 object by adding components
-    vectorR3 vector_sum(this->x_component + b.x_component, this->y_component + b.y_component, this->z_component + b.z_component);
+    vectorR3 vector_sum(this->xComponent + b.xComponent, this->yComponent + b.yComponent, this->zComponent + b.zComponent);
     return vector_sum;
 }
 
 vectorR3 vectorR3::scalarMultiply(double c) {
-    vectorR3 scalar_multiple(this->x_component * c, this->y_component * c, this->z_component * c);
+    vectorR3 scalar_multiple(this->xComponent * c, this->yComponent * c, this->zComponent * c);
     return scalar_multiple;
 }
 
@@ -226,67 +226,67 @@ vectorR3 vectorR3::vectorProject(const vectorR3 &b) {
 
 double vectorR3::dot(const vectorR3& b) {
     // Computes the scalar product of vectorR3 objects a and b
-    return (this->x_component*b.x_component + this->y_component*b.y_component + this->z_component*b.z_component);
+    return (this->xComponent*b.xComponent + this->yComponent*b.yComponent + this->zComponent*b.zComponent);
 }
 
 vectorR3 vectorR3::cross(const vectorR3& b) {
     // Computes the vector product of vectorR3 objects a and b according to the RHR
-    vectorR3 cross_product(((this->y_component * b.z_component) - (this->z_component * b.y_component)),
-        -((this->x_component * b.z_component) - (this->z_component * b.x_component)),
-        ((this->x_component * b.y_component) - (this->y_component * b.x_component)));
+    vectorR3 cross_product(((this->yComponent * b.zComponent) - (this->zComponent * b.yComponent)),
+        -((this->xComponent * b.zComponent) - (this->zComponent * b.xComponent)),
+        ((this->xComponent * b.yComponent) - (this->yComponent * b.xComponent)));
     return cross_product;
 }
 
 vectorR3& vectorR3::operator=(const vectorR3& a) {
     if(this != &a) {
-        this->x_component = a.x_component;
-        this->y_component = a.y_component;
-        this->z_component = a.z_component;
+        this->xComponent = a.xComponent;
+        this->yComponent = a.yComponent;
+        this->zComponent = a.zComponent;
     }
     return *this;
 }
 
 bool vectorR3::operator==(const vectorR3& other) {
-    return (std::abs(this->x_component - other.x_component) < TOL) &&
-        (std::abs(this->y_component - other.y_component) < TOL) &&
-        (std::abs(this->z_component - other.z_component) < TOL);
+    return (std::abs(this->xComponent - other.xComponent) < TOL) &&
+        (std::abs(this->yComponent - other.yComponent) < TOL) &&
+        (std::abs(this->zComponent - other.zComponent) < TOL);
 }
 
 vectorR3 vectorR3::operator+(const vectorR3& other) {
-    return vectorR3(this->x_component + other.x_component, this->y_component + other.y_component, this->z_component + other.z_component);
+    return vectorR3(this->xComponent + other.xComponent, this->yComponent + other.yComponent, this->zComponent + other.zComponent);
 }
 
 vectorR3 vectorR3::operator-(const vectorR3& other) {
-    return vectorR3(this->x_component - other.x_component, this->y_component - other.y_component, this->z_component - other.z_component);
+    return vectorR3(this->xComponent - other.xComponent, this->yComponent - other.yComponent, this->zComponent - other.zComponent);
 }
 
 double vectorR3::magSquared() {
-    return (this->x_component * this->x_component) + (this->y_component * this->y_component) + (this->z_component * this->z_component);
+    return (this->xComponent * this->xComponent) + (this->yComponent * this->yComponent) + (this->zComponent * this->zComponent);
 }
 
 vectorR3 vectorR3::operator*(const double& scalar) {
     // Overloaded operator * for scalar multiplication
-    return vectorR3(this->x_component * scalar, this->y_component * scalar, this->z_component * scalar);
+    return vectorR3(this->xComponent * scalar, this->yComponent * scalar, this->zComponent * scalar);
 }
 
 vectorR3 vectorR3::operator/(const double &scalar) {
     // Overloaded operator / for scalar division
-    return vectorR3(this->x_component / scalar, this->y_component / scalar, this->z_component / scalar);
+    return vectorR3(this->xComponent / scalar, this->yComponent / scalar, this->zComponent / scalar);
 }
 
 double vectorR3::operator*(const vectorR3& other) {
     // Overloaded operator * for dot product
-    return (this->x_component * other.x_component) + (this->y_component * other.y_component) + (this->z_component * other.z_component);
+    return (this->xComponent * other.xComponent) + (this->yComponent * other.yComponent) + (this->zComponent * other.zComponent);
 }
 
 void vectorR3::operator*=(const double& scalar) {
-    this->x_component *= scalar;
-    this->y_component *= scalar;
-    this->z_component *= scalar;
+    this->xComponent *= scalar;
+    this->yComponent *= scalar;
+    this->zComponent *= scalar;
 }
 
 void vectorR3::operator+=(const vectorR3& other) {
-    this->x_component += other.x_component;
-    this->y_component += other.y_component;
-    this->z_component += other.z_component;
+    this->xComponent += other.xComponent;
+    this->yComponent += other.yComponent;
+    this->zComponent += other.zComponent;
 }

@@ -4,6 +4,7 @@
 #include "vectorR3.hpp"
 #include "drawing.hpp"
 #include "pointCharge.hpp"
+#include "bField.hpp"
 #include <vector>
 
 
@@ -41,7 +42,7 @@ void pointCharges() {
     }
 }
 
-void debug() {
+void drawB() {
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
     while (win.isOpen()) {
         win.clear(sf::Color::White);
@@ -51,13 +52,8 @@ void debug() {
                 win.close();
             }
         }
-        vectorR3 where(500, 500, 0);
-        vectorR3 where2(500, 600, 0);
-        vectorR3 into(0, 0, 2);
-        vectorR3 out(0, 0, -2);
-        draw::intoOut(win, where, into);
-        draw::intoOut(win, where2, out);
-        win.display();
+        longThinWire wir(3.0, 4.0, 2.0);
+        draw::drawBField(win, wir);
     }
 }
 
@@ -68,7 +64,7 @@ int main() {
     if(choice == 1) {
         pointCharges();
     } else if(choice == 2) {
-        debug();
+        drawB();
     } else {
         return 1;
     }
