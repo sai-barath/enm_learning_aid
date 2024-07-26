@@ -176,7 +176,7 @@ void draw::drawBField(sf::RenderWindow& win, const longThinWire& wir) {
         for(double j = 0.0; j < win.getSize().x; j += (win.getSize().x / 10.0)) {
             vectorR3 pos(i, j, 0);
             vectorR3 bField = wir.computeBField(pos);
-            draw::intoOut(win, pos, pos);
+            draw::intoOut(win, pos, bField);
         }
     }
     win.draw(wire, 2, sf::Lines);

@@ -40,7 +40,7 @@ class vectorR3 {
      * 
      * @return The magnitude of the vector.
     */
-    double magnitude();
+    double magnitude() const;
 
     /**
      * Calculate the squared magnitude of the vector.
@@ -50,7 +50,7 @@ class vectorR3 {
      * 
      * @return The magnitude of the vector squared.
     */
-    double magSquared();
+    double magSquared() const;
 
     /**
      * Find the sum vector b and this vector.
@@ -60,7 +60,7 @@ class vectorR3 {
      * @param b The vector to add to this vector.
      * @return The sum of the two vectors.
     */
-    vectorR3 add(const vectorR3& b);
+    vectorR3 add(const vectorR3& b) const;
 
     /**
      * Performs basic scalar multiplication.
@@ -68,7 +68,7 @@ class vectorR3 {
      * @param c The scalar quantity by which to multiply the vector.
      * @return The scalar multiple of the vector.
     */
-    vectorR3 scalarMultiply(double c);
+    vectorR3 scalarMultiply(double c) const;
 
     /**
      * Performs a basic scalar projection.
@@ -78,7 +78,7 @@ class vectorR3 {
      * @param b The vector to project onto this vector.
      * @return The result of the scalar projection.
     */
-    double scalarProject(const vectorR3& b);
+    double scalarProject(const vectorR3& b) const;
 
     /**
      * Performs a basic vector projection.
@@ -88,7 +88,7 @@ class vectorR3 {
      * @param b the vector to project onto this vector.
      * @return The result of the vector projection.
     */
-    vectorR3 vectorProject(const vectorR3 &b);
+    vectorR3 vectorProject(const vectorR3 &b) const;
 
     /**
      * Performs a basic dot product of this vector and the given vector.
@@ -96,7 +96,7 @@ class vectorR3 {
      * @param b The vector with which to perform the dot product.
      * @return The result of the dot product.
     */
-    double dot(const vectorR3 &b);
+    double dot(const vectorR3 &b) const;
 
     /**
      * Performs a basic cross product of this vector and the given vector.
@@ -104,7 +104,7 @@ class vectorR3 {
      * @param b The vector with which to perform the cross product.
      * @return The result of the cross product.
     */
-    vectorR3 cross(const vectorR3& b);
+    vectorR3 cross(const vectorR3& b) const;
 
     /**
      * Make a deep copy of another vector to instantiate this vector.
@@ -164,7 +164,7 @@ class vectorR3 {
      * @param Other The vector with which to perform the dot product.
      * @return The result of the dot product.
      */
-    double operator*(const vectorR3& other);
+    double operator*(const vectorR3& other) const;
 
     /**
      * Performs basic scalar multiplication. Sets this vector equal to the resulting scalar multiple.
@@ -199,37 +199,38 @@ vectorR3::vectorR3(const vectorR3& other) {
     this->zComponent = other.zComponent;
 }
 
-double vectorR3::magnitude() {
+double vectorR3::magnitude() const {
     return (std::sqrt((this->xComponent * this->xComponent) + (this->yComponent * this->yComponent) + (this->zComponent * this->zComponent)));
 }
 
-vectorR3 vectorR3::add(const vectorR3& b) {
+vectorR3 vectorR3::add(const vectorR3& b) const {
     // Computes the vector sum of a and b and returns a vectorR3 object by adding components
     vectorR3 vector_sum(this->xComponent + b.xComponent, this->yComponent + b.yComponent, this->zComponent + b.zComponent);
     return vector_sum;
 }
 
-vectorR3 vectorR3::scalarMultiply(double c) {
+vectorR3 vectorR3::scalarMultiply(double c) const {
     vectorR3 scalar_multiple(this->xComponent * c, this->yComponent * c, this->zComponent * c);
     return scalar_multiple;
 }
 
-double vectorR3::scalarProject(const vectorR3 &b) {
+double vectorR3::scalarProject(const vectorR3 &b) const {
     // Computes the scalar projection for b onto a
     return (this->dot(b) / (this->magnitude()));
 }
 
-vectorR3 vectorR3::vectorProject(const vectorR3 &b) {
+vectorR3 vectorR3::vectorProject(const vectorR3 &b) const {
     // computes the vector projection for b onto a
-    return *this * (this->dot(b) / this->magSquared());
+    double factor = this->dot(b) / this->magSquared();
+    return vectorR3(factor * this->xComponent, factor * this->yComponent, factor * this->yComponent);
 }
 
-double vectorR3::dot(const vectorR3& b) {
+double vectorR3::dot(const vectorR3& b) const {
     // Computes the scalar product of vectorR3 objects a and b
     return (this->xComponent*b.xComponent + this->yComponent*b.yComponent + this->zComponent*b.zComponent);
 }
 
-vectorR3 vectorR3::cross(const vectorR3& b) {
+vectorR3 vectorR3::cross(const vectorR3& b) const {
     // Computes the vector product of vectorR3 objects a and b according to the RHR
     vectorR3 cross_product(((this->yComponent * b.zComponent) - (this->zComponent * b.yComponent)),
         -((this->xComponent * b.zComponent) - (this->zComponent * b.xComponent)),
@@ -260,7 +261,7 @@ vectorR3 vectorR3::operator-(const vectorR3& other) {
     return vectorR3(this->xComponent - other.xComponent, this->yComponent - other.yComponent, this->zComponent - other.zComponent);
 }
 
-double vectorR3::magSquared() {
+double vectorR3::magSquared() const {
     return (this->xComponent * this->xComponent) + (this->yComponent * this->yComponent) + (this->zComponent * this->zComponent);
 }
 
@@ -274,7 +275,7 @@ vectorR3 vectorR3::operator/(const double &scalar) {
     return vectorR3(this->xComponent / scalar, this->yComponent / scalar, this->zComponent / scalar);
 }
 
-double vectorR3::operator*(const vectorR3& other) {
+double vectorR3::operator*(const vectorR3& other) const {
     // Overloaded operator * for dot product
     return (this->xComponent * other.xComponent) + (this->yComponent * other.yComponent) + (this->zComponent * other.zComponent);
 }
