@@ -35,7 +35,7 @@ class longThinWire {
      * @param pos the position
      * @return The magnetic field vector at the given position
      */
-    vectorR3 computeBField(const vectorR3& pos);
+    vectorR3 computeBField(const vectorR3& pos) const;
 
 };
 
@@ -48,7 +48,7 @@ longThinWire::longThinWire(const vectorR3 &v, double curr) {
     this->direction = v;
 }
 
-vectorR3 longThinWire::computeBField(const vectorR3& pos) {
+vectorR3 longThinWire::computeBField(const vectorR3& pos) const {
     vectorR3 R = direction.vectorProject(pos) - pos; // Vector pointing from the position to the wire, normal to the wire
     vectorR3 B = R.cross(direction);
     B = B / B.magnitude(); //unit vector in direction of magnetic field
