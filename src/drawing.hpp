@@ -146,12 +146,12 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
 }
 
 void draw::drawBField(sf::RenderWindow& win, const longThinWire& wir) {
-    double slopeFactor = win.getSize().y / win.getSize().x;
+    double windowSlopeFactor = win.getSize().y / win.getSize().x;
     double slope = wir.direction.yComponent / wir.direction.xComponent;
     double angle = atan(slope) * (180 / PI);
     double maxX = -1.0;
     double maxY = -1.0;
-    if(slope > slopeFactor) { // steep
+    if(slope > windowSlopeFactor) { // steep
         maxX = win.getSize().y / slope;
         maxY = 0;
     } else {
@@ -171,13 +171,13 @@ void draw::drawBField(sf::RenderWindow& win, const longThinWire& wir) {
         triangle.rotate(angle - 90);
         win.draw(triangle);
     }
-    // Don't need to use SFML's coord system here bc IntoOut will take care of that
-    for(double i = 0.0; i < win.getSize().y; i += (win.getSize().y / 10.0)) {
-        for(double j = 0.0; j < win.getSize().x; j += (win.getSize().x / 10.0)) {
+    // Don't need to use SFML's coord system here
+    for(double i = 0.0; i < win.getSize().x; i += (win.getSize().x / 10.0)) {
+        for(double j = 0.0; j < win.getSize().y; j += (win.getSize().y / 10.0)) {
             vectorR3 pos(i, j, 0);
             vectorR3 bField = wir.computeBField(pos);
             draw::intoOut(win, pos, bField);
         }
-    }
+    } 
     win.draw(wire, 2, sf::Lines);
 }
