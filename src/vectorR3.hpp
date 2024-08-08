@@ -220,7 +220,7 @@ double vectorR3::scalarProject(const vectorR3 &b) const {
 vectorR3 vectorR3::vectorProject(const vectorR3 &b) const {
     // computes the vector projection for b onto a
     double factor = this->dot(b) / this->magSquared();
-    return vectorR3(factor * this->xComponent, factor * this->yComponent, factor * this->yComponent);
+    return vectorR3(factor * this->xComponent, factor * this->yComponent, factor * this->zComponent);
 }
 
 double vectorR3::dot(const vectorR3& b) const {

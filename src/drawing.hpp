@@ -176,7 +176,7 @@ void draw::drawBField(sf::RenderWindow& win, const longThinWire& wir) {
         for(double j = 0.0; j < win.getSize().y; j += (win.getSize().y / 10.0)) {
             vectorR3 pos(i, j, 0);
             vectorR3 bField = wir.computeBField(pos);
-            std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;   
+            //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;   
             draw::intoOut(win, pos, bField);
         }
     } 
