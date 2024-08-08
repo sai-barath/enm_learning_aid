@@ -4,6 +4,7 @@
 #include "vectorR3.hpp"
 #include "drawing.hpp"
 #include "pointCharge.hpp"
+#include "bField.hpp"
 #include <vector>
 
 
@@ -41,12 +42,33 @@ void pointCharges() {
     }
 }
 
+void drawB() {
+    double x = 1.0,  y = 1.0, curr = 0.0;
+    std::cout << "Enter x-dir, y-dir, current" << std::endl;
+    std::cin >> x >> y >> curr;
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
+    while (win.isOpen()) {
+        win.clear(sf::Color::White);
+        sf::Event e;
+        while (win.pollEvent(e)) {
+            if (e.type == sf::Event::Closed) {
+                win.close();
+            }
+        }
+        longThinWire wir(x, y, curr);
+        draw::drawBField(win, wir);
+        win.display();
+    }
+}
+
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl; 
+    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl; 
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
         pointCharges();
+    } else if(choice == 2) {
+        drawB();
     } else {
         return 1;
     }

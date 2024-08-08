@@ -10,9 +10,8 @@ class longThinWire {
 
   private:
     double current; // Current through the wire in amperes
-    vectorR3 direction; // The direction of the current in the infinite wire
-
   public:
+    vectorR3 direction; // The direction of the current in the infinite wire
     /**
      * Instantiate an infinite wire
      *
@@ -33,12 +32,10 @@ class longThinWire {
     /**
      * Find the magnetic field at the given location
      *
-     * @param x The x coordinate of the location
-     * @param y The y coordinate of the location
-     * @param z The z coordinate of the location
+     * @param pos the position
      * @return The magnetic field vector at the given position
      */
-    vectorR3 compute_B_field(double x, double y, double z);
+    vectorR3 computeBField(const vectorR3& pos) const;
 
 };
 
@@ -49,13 +46,13 @@ longThinWire::longThinWire(double vx, double vy, double curr) {
 
 longThinWire::longThinWire(const vectorR3 &v, double curr) {
     this->direction = v;
+    current = curr;
 }
 
-vectorR3 longThinWire::compute_B_field(double x, double y, double z) {
-    vectorR3 pos = vectorR3(x, y, z);
-    vectorR3 R = direction.vectorProject(pos) - pos; // Vector pointing from the position to the wire, normal to the wire
-
-    vectorR3 B = R.cross(direction);
+vectorR3 longThinWire::computeBField(const vectorR3& pos) const {
+    vectorR3 R = pos - direction.vectorProject(pos); // Vector pointing from the position to the wire, normal to the wire
+    vectorR3 B = direction ^ R; // Initially has an incorrect magnitude
+    std::cout << R - pos << std::endl; 
     B = B / B.magnitude(); //unit vector in direction of magnetic field
     B = B * MU0 * current / (2 * PI * R.magnitude());
     return B;
