@@ -5,6 +5,7 @@
 #include "drawing.hpp"
 #include "pointCharge.hpp"
 #include "bField.hpp"
+#include "vertexWire.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
