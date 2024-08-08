@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <iostream>
 
 const double TOL = 1e-5; // TODO
 const double EP0 = 8.8542E-12; // Vacuum permittivity constant (C^2/(N*m^2))
@@ -32,8 +33,6 @@ class vectorR3 {
      * Instantiates the vector <0.0, 0.0, 0.0>.
     */
     vectorR3();
-    
-    vectorR3(const vectorR3& other);
 
     /**
      * Calculate the magnitude of the vector.
@@ -107,14 +106,6 @@ class vectorR3 {
     vectorR3 cross(const vectorR3& b) const;
 
     /**
-     * Make a deep copy of another vector to instantiate this vector.
-     * 
-     * @param other The vector of which to make the deep copy.
-     * @return The new instantiated vector.
-    */
-    vectorR3& operator=(const vectorR3& other);
-
-    /**
      * Checks if this vector is the same as another vector.
      *
      * @param other The other vector with which to make the comparison.
@@ -130,7 +121,7 @@ class vectorR3 {
      * @param other The vector to add to this vector.
      * @return The sum of the two vectors.
      */
-    vectorR3 operator+(const vectorR3& other);
+    vectorR3 operator+(const vectorR3& other) const;
 
     /**
      * Find the difference between this vector and another vector.
@@ -140,7 +131,7 @@ class vectorR3 {
      * @param other The vector to subtract from this vector.
      * @return The difference of the two vectors.
      */
-    vectorR3 operator-(const vectorR3& other);
+    vectorR3 operator-(const vectorR3& other) const;
 
     /**
      * Performs basic scalar multiplication.
@@ -148,7 +139,7 @@ class vectorR3 {
      * @param scalar The scalar quantity by which to multiply the vector.
      * @return The scalar multiple of the vector.
      */
-    vectorR3 operator*(const double& scalar);
+    vectorR3 operator*(const double& scalar) const;
 
     /**
      * Performs basic scalar division.
@@ -156,15 +147,23 @@ class vectorR3 {
      * @param scalar The scalar quantity by which to divide the vector.
      * @return The resulting vector.
     */
-    vectorR3 operator/(const double &scalar);
+    vectorR3 operator/(const double &scalar) const;
 
     /**
      * Performs a basic dot product of this vector and the given vector.
      *
-     * @param Other The vector with which to perform the dot product.
+     * @param other The vector with which to perform the dot product.
      * @return The result of the dot product.
      */
     double operator*(const vectorR3& other) const;
+
+    /**
+     * Performs the cross product this X other
+     * ^ used because the cross product is a wedge product
+     * @param other The vector with which to perform the cross product.
+     * @return The result of the cross product.
+     */
+    vectorR3 operator^(const vectorR3& other) const;
 
     /**
      * Performs basic scalar multiplication. Sets this vector equal to the resulting scalar multiple.
@@ -179,6 +178,11 @@ class vectorR3 {
      * @param other The other vector
      */
     void operator+=(const vectorR3& other);
+
+    /**
+     * Operator overload for <<
+     */
+    friend std::ostream& operator<<(std::ostream& out, const vectorR3& vec);
 };
 
 vectorR3::vectorR3(double i, double j, double k) {
@@ -191,12 +195,6 @@ vectorR3::vectorR3() {
     xComponent = 0.0;
     yComponent = 0.0;
     zComponent = 0.0;
-}
-
-vectorR3::vectorR3(const vectorR3& other) {
-    this->xComponent = other.xComponent;
-    this->yComponent = other.yComponent;
-    this->zComponent = other.zComponent;
 }
 
 double vectorR3::magnitude() const {
@@ -238,26 +236,17 @@ vectorR3 vectorR3::cross(const vectorR3& b) const {
     return cross_product;
 }
 
-vectorR3& vectorR3::operator=(const vectorR3& a) {
-    if(this != &a) {
-        this->xComponent = a.xComponent;
-        this->yComponent = a.yComponent;
-        this->zComponent = a.zComponent;
-    }
-    return *this;
-}
-
 bool vectorR3::operator==(const vectorR3& other) {
     return (std::abs(this->xComponent - other.xComponent) < TOL) &&
         (std::abs(this->yComponent - other.yComponent) < TOL) &&
         (std::abs(this->zComponent - other.zComponent) < TOL);
 }
 
-vectorR3 vectorR3::operator+(const vectorR3& other) {
+vectorR3 vectorR3::operator+(const vectorR3& other) const {
     return vectorR3(this->xComponent + other.xComponent, this->yComponent + other.yComponent, this->zComponent + other.zComponent);
 }
 
-vectorR3 vectorR3::operator-(const vectorR3& other) {
+vectorR3 vectorR3::operator-(const vectorR3& other) const {
     return vectorR3(this->xComponent - other.xComponent, this->yComponent - other.yComponent, this->zComponent - other.zComponent);
 }
 
@@ -265,12 +254,12 @@ double vectorR3::magSquared() const {
     return (this->xComponent * this->xComponent) + (this->yComponent * this->yComponent) + (this->zComponent * this->zComponent);
 }
 
-vectorR3 vectorR3::operator*(const double& scalar) {
+vectorR3 vectorR3::operator*(const double& scalar) const {
     // Overloaded operator * for scalar multiplication
     return vectorR3(this->xComponent * scalar, this->yComponent * scalar, this->zComponent * scalar);
 }
 
-vectorR3 vectorR3::operator/(const double &scalar) {
+vectorR3 vectorR3::operator/(const double &scalar) const {
     // Overloaded operator / for scalar division
     return vectorR3(this->xComponent / scalar, this->yComponent / scalar, this->zComponent / scalar);
 }
@@ -278,6 +267,12 @@ vectorR3 vectorR3::operator/(const double &scalar) {
 double vectorR3::operator*(const vectorR3& other) const {
     // Overloaded operator * for dot product
     return (this->xComponent * other.xComponent) + (this->yComponent * other.yComponent) + (this->zComponent * other.zComponent);
+}
+
+vectorR3 vectorR3::operator^(const vectorR3& other) const {
+    return vectorR3(((this->yComponent * other.zComponent) - (this->zComponent * other.yComponent)),
+        -((this->xComponent * other.zComponent) - (this->zComponent * other.xComponent)),
+        ((this->xComponent * other.yComponent) - (this->yComponent * other.xComponent)));
 }
 
 void vectorR3::operator*=(const double& scalar) {
@@ -290,4 +285,9 @@ void vectorR3::operator+=(const vectorR3& other) {
     this->xComponent += other.xComponent;
     this->yComponent += other.yComponent;
     this->zComponent += other.zComponent;
+}
+
+std::ostream& operator<<(std::ostream& out, const vectorR3& vec) {
+    out << "(" << vec.xComponent << ", " << vec.yComponent << ", " << vec.zComponent << "), mag: " << vec.magnitude() << std::endl; 
+    return out;
 }
