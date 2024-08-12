@@ -61,14 +61,43 @@ void drawB() {
     }
 }
 
+void vertexWire() {
+    double curr = 0.0;
+    std::cout << "Enter current" << std::endl;
+    std::cin >> curr;
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
+    /**
+     * Cache will hold z-Component of magnetic field at each location on screen
+     * Will only be recomputed each time a new vertex is added
+     */
+    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1);
+    for(int i = 0; i < cache.size(); i++) {
+        cache[i].reserve((win.getSize().y / 100) + 1);
+    }
+    while (win.isOpen()) {
+        win.clear(sf::Color::White);
+        sf::Event e;
+        while (win.pollEvent(e)) {
+            if (e.type == sf::Event::Closed) {
+                win.close();
+            }
+        }
+        wireOfVertices wir(curr);
+        draw::drawVertexWire(win, wir, cache);
+        win.display();
+    }
+}
+
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl; 
+    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl << "(3) Wire of vertices" << std::endl; 
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
         pointCharges();
     } else if(choice == 2) {
         drawB();
+    } else if(choice == 3) {
+        
     } else {
         return 1;
     }

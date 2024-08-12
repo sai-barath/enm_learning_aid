@@ -26,14 +26,14 @@ class wireOfVertices {
      * @param pos: The location
      * @return: The Magnetic field vector at pos
      */
-    vectorR3 bField(const vectorR3& pos);
+    vectorR3 bField(const vectorR3& pos) const;
 };
 
 void wireOfVertices::addVertex(double xPos, double yPos) {
   vertices.push_back(vectorR3(xPos, yPos, 0.0));
 }
 
-vectorR3 wireOfVertices::bField(const vectorR3& pos) {
+vectorR3 wireOfVertices::bField(const vectorR3& pos) const {
   int numSides = vertices.size();
   if(vertices.size() < 3) {
     std::cout << "Not enough vertices in wire shape, returning 0 vector" << std::endl;
@@ -44,6 +44,7 @@ vectorR3 wireOfVertices::bField(const vectorR3& pos) {
    * Compute the component of the b-Field due to the segment of wire starting at vertex i; 
    * if last vertex, the wire goes back to the first
    **/
+  double constant = (MU0 * this->current) / (4 * PI);
   for(int i = 0; i < numSides; i++) {
     vectorR3 dir = vertices[(i + 1) % numSides] - vertices[i];
   }

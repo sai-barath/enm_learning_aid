@@ -9,7 +9,7 @@ class pointCharge {
         double charge;
         pointCharge(const vectorR3& p, double c);
         pointCharge(double x, double y, double z, double c);
-        vectorR3 efield(const vectorR3& loc);
+        vectorR3 efield(const vectorR3& loc) const;
 };
 
 pointCharge::pointCharge(const vectorR3& p, double c) {
@@ -22,7 +22,7 @@ pointCharge::pointCharge(double x, double y, double z, double c) {
     this->charge = c;
 }
 
-vectorR3 pointCharge::efield(const vectorR3& loc) {
+vectorR3 pointCharge::efield(const vectorR3& loc) const {
     vectorR3 dir = this->pos - loc;
     dir *= -1.0;
     double magdirection = dir.magnitude();
