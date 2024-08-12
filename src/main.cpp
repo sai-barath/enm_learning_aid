@@ -97,7 +97,7 @@ int main() {
     } else if(choice == 2) {
         drawB();
     } else if(choice == 3) {
-        
+        vertexWire();
     } else {
         return 1;
     }

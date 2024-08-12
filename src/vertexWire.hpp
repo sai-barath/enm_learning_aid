@@ -7,8 +7,8 @@
 class wireOfVertices {
   private:
     double current;
-    std::vector<vectorR3> vertices;
   public:
+    std::vector<vectorR3> vertices;
     /**
      * Create a wire of vertices
      * @param curr: The (equal) current in each segment of wire
