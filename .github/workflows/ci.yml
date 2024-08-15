@@ -17,6 +17,6 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
             - name: Generate build files
-              run: cmake -B build
+              run: cmake -B build .
             - name: Finish Build
               run: cmake --build .
