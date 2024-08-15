@@ -5,8 +5,15 @@ on:
             workflows
 jobs: 
     build:
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os }}
+        strategy:
+          fail-fast: false
+          matrix:
+            os: [ubuntu-latest, windows-latest, macos-latest]
         steps:
+            - name: get linux deps
+              if: runner.os == 'Linux'
+              run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
             - name: Checkout
               uses: actions/checkout@v4
             - name: Generate build files
