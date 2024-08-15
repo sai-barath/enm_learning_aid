@@ -1,19 +1,35 @@
 name: ci
-on:
-    push:
-        branches:
-            workflows
+on: [push, pull_request]
 jobs: 
-    build:
-        runs-on: ${{ matrix.os }}
-        strategy:
-          fail-fast: false
-          matrix:
-            os: [ubuntu-latest, windows-latest, macos-latest]
+    buildUbuntu:
+        runs-on: ubuntu-latest
         steps:
             - name: get linux deps
-              if: runner.os == 'Linux'
               run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Generate build files
+              run: cmake -B build
+            - name: Finish Build
+              run: cmake --build build
+            - uses: actions/upload-artifact@v4
+              with:
+                path: build/enm_learning_aid
+    buildWin:
+      runs-on: windows-latest
+      steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Generate build files
+              run: cmake -B build
+            - name: Finish Build
+              run: cmake --build build
+            - uses: actions/upload-artifact@v4
+              with:
+                path: build/enm_learning_aid.exe
+    buildMac: 
+      runs-on: windows-latest
+      steps:
             - name: Checkout
               uses: actions/checkout@v4
             - name: Generate build files
