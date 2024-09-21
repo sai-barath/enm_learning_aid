@@ -10,6 +10,13 @@
 #include <vector>
 
 namespace draw {
+    /**
+     * Draw a 2D vector on the screen
+     *
+     * @param win The window to draw on
+     * @param begin start point
+     * @param vect actual vector
+     */
     void drawVector(sf::RenderWindow &win, const vectorR3& begin, const vectorR3& vect) {
         int triangleSize = 10;
         vectorR3 start(begin.xComponent, win.getSize().y - begin.yComponent, 0);
@@ -45,7 +52,12 @@ namespace draw {
         win.draw(line,2 , sf::Lines);
         win.draw(triangle);
     }
-
+    /**
+     * Draw a small circle representing a charge on the screen
+     *
+     * @param win The window to draw on
+     * @param pc The point charge
+     */
     void drawCharge(sf::RenderWindow& win, pointCharge& pc) {
         sf::CircleShape charge(8);
         pc.pos.xComponent = std::floor(pc.pos.xComponent / 100) * 100;
@@ -62,6 +74,13 @@ namespace draw {
     
     }
 
+    /**
+     * Draw a vector with only a z-component
+     *
+     * @param win The window to draw on
+     * @param where start point
+     * @param vec actual vector
+     */
     void intoOut(sf::RenderWindow& win, const vectorR3& where, const vectorR3& vec) {
         double zComp = std::abs(vec.zComponent);
         if(zComp > 48.0) {
@@ -97,6 +116,12 @@ namespace draw {
         }
     }
 
+    /**
+     * Draw a set of charges and their associated electric fields
+     *
+     * @param win The window to draw on
+     * @param charges  an std::vector consisting of the charges
+     */
     void drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charges) {
         int numc = charges.size();
         for(int i = 0; i < numc; i++) {
@@ -130,6 +155,12 @@ namespace draw {
         }
     }
 
+    /**
+     * Draw an arbitrarily long wire and its magnetic field
+     *
+     * @param win The window to draw on
+     * @param wir The wire
+     */
     void drawBField(sf::RenderWindow& win, const longThinWire& wir) {
         double windowSlopeFactor = win.getSize().y / win.getSize().x;
         double slope = wir.direction.yComponent / wir.direction.xComponent;
