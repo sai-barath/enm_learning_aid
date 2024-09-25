@@ -74,6 +74,7 @@ void vertexWire() {
     for(int i = 0; i < cache.size(); i++) {
         cache[i].reserve((win.getSize().y / 100) + 1);
     }
+    wireOfVertices wir(curr);
     while (win.isOpen()) {
         win.clear(sf::Color::White);
         sf::Event e;
@@ -82,7 +83,6 @@ void vertexWire() {
                 win.close();
             }
         }
-        wireOfVertices wir(curr);
         draw::drawVertexWire(win, wir, cache);
         win.display();
     }
