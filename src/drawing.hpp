@@ -189,6 +189,7 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
     
     }
 
+<<<<<<< HEAD
     /**
      * Draw a vector with only a z-component
      *
@@ -265,6 +266,22 @@ void draw::drawElecField(sf::RenderWindow& win, std::vector<pointCharge>& charge
                 }
                 if(!isChargePresent[i][j]) {
                     draw::drawVector(win, board[i][j], efieldatpos);
+=======
+void draw::drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double>>& cache) {
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+        sf::Vector2i position = sf::Mouse::getPosition();
+        wir.addVertex(position.x, win.getSize().y - position.y);
+        std::cout << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+        if(wir.vertices.size() >= 3) {
+            for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
+                for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
+                    vectorR3 pos(i * 100, j * 100, 0.0);
+                    // vectorR3 bField = wir.bField(pos);
+                    // Uncomment once computation is finished
+                    vectorR3 bField(0.0, 0.0, 17.0);
+                    cache[i][j] = bField.zComponent;
+                    draw::intoOut(win, pos, bField);
+>>>>>>> 60a44db (fix: no longer loop pixel by pixel)
                 }
             }
         }
