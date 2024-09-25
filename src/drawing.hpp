@@ -276,9 +276,7 @@ void draw::drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vecto
             for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
                 for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
                     vectorR3 pos(i * 100, j * 100, 0.0);
-                    // vectorR3 bField = wir.bField(pos);
-                    // Uncomment once computation is finished
-                    vectorR3 bField(0.0, 0.0, 17.0);
+                    vectorR3 bField = wir.bField(pos);
                     cache[i][j] = bField.zComponent;
                     draw::intoOut(win, pos, bField);
 >>>>>>> 60a44db (fix: no longer loop pixel by pixel)
