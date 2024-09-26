@@ -21,7 +21,7 @@ void pointCharges() {
         std::cin >> x >> y >> c;
         charges.push_back(pointCharge(x, y, 0.0, c));
     }
-    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
     int i = 0;
     std::cout << "Units used are meters, coulombs, and newtons, chages around the order of magnitude of 10^-4 work best " << std::endl;
     while (win.isOpen()) {
@@ -46,7 +46,7 @@ void drawB() {
     double x = 1.0,  y = 1.0, curr = 0.0;
     std::cout << "Enter x-dir, y-dir, current" << std::endl;
     std::cin >> x >> y >> curr;
-    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
     while (win.isOpen()) {
         win.clear(sf::Color::White);
         sf::Event e;

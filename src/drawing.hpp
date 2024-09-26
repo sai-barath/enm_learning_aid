@@ -164,13 +164,14 @@ namespace draw {
     void drawBField(sf::RenderWindow& win, const longThinWire& wir) {
         double windowSlopeFactor = win.getSize().y / win.getSize().x;
         double slope = wir.direction.yComponent / wir.direction.xComponent;
-        double angle = atan(slope) * (180 / PI);
         double maxX = -1.0;
         double maxY = -1.0;
-        if(slope > windowSlopeFactor) { // steep
+        //If our wire is steeper than the window, we have to truncate it to avoid drawing out of bounds
+        if (slope > windowSlopeFactor) {
             maxX = win.getSize().y / slope;
             maxY = 0;
         } else {
+            //Otheriwse just draw until it hits the right edge of the window
             maxX = win.getSize().x;
             maxY = slope * win.getSize().x;
         }
@@ -178,13 +179,29 @@ namespace draw {
             sf::Vertex(sf::Vector2f(0, win.getSize().y), sf::Color::Black),
             sf::Vertex(sf::Vector2f(maxX, maxY), sf::Color::Black)
         };
+        //Calculate angle *after* we know the final wire vector
+        double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
+
         double triangleSize = 10.0;
         for(double xPos = 0.0; xPos < maxX; xPos += (maxX / 5)) {
+
+            //Temporary fix for #33; calculate "center of mass" or average position, then rotate
+            //Let's move this into a helper/utility class later.
+            //We also aren't drawing enough triangles when slope < 1, is this intended?
+            //---
             sf::CircleShape triangle(triangleSize, 3);
+            sf::Vector2f newTriangleOrigin;
+            for (int i = 0; i < 3; i++) {
+                sf::Vector2f trianglePoint = triangle.getPoint(i);
+                newTriangleOrigin.x += trianglePoint.x;
+                newTriangleOrigin.y += trianglePoint.y;
+            }
+            triangle.setOrigin(newTriangleOrigin.x / 3, newTriangleOrigin.y / 3);
+            //---
+            
             triangle.setFillColor(sf::Color::Red);
-            triangle.setOrigin(triangleSize, triangleSize);
+            triangle.rotate(angle + 90);
             triangle.setPosition(xPos, win.getSize().y - (slope * xPos));
-            triangle.rotate(angle - 90);
             win.draw(triangle);
         }
         // Don't need to use SFML's coord system here
