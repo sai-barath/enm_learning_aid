@@ -5,6 +5,7 @@
 #include "drawing.hpp"
 #include "pointCharge.hpp"
 #include "bField.hpp"
+#include "vertexWire.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -214,5 +215,31 @@ namespace draw {
             }
         } 
         win.draw(wire, 2, sf::Lines);
+    }
+
+    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double>>& cache) {
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+            sf::Vector2i position = sf::Mouse::getPosition();
+            wir.addVertex(position.x, win.getSize().y - position.y);
+            std::cout << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+            if(wir.vertices.size() >= 3) {
+                for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
+                    for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
+                        vectorR3 pos(i * 100, j * 100, 0.0);
+                        vectorR3 bField = wir.bField(pos);
+                        cache[i][j] = bField.zComponent;
+                        draw::intoOut(win, pos, bField);
+                    }
+                }
+            }
+        }
+        if(wir.vertices.size() >= 3) {
+            sf::Vertex wire[wir.vertices.size() + 1];
+            for(int i = 0; i < wir.vertices.size(); i++) {
+                wire[i] = sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black);
+            }
+            wire[wir.vertices.size()] = wire[0];
+            win.draw(wire, wir.vertices.size() + 1, sf::Lines);
+        }
     }
 };
