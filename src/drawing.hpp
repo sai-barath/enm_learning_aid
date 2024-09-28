@@ -84,17 +84,27 @@ namespace draw {
      */
     void intoOut(sf::RenderWindow& win, const vectorR3& where, const vectorR3& vec) {
         double zComp = std::abs(vec.zComponent);
-        if(zComp > 48.0) {
+        /*if(zComp > 48.0) {
             zComp = 48.0;
         } else if(zComp < 5.0 && zComp != 0) {
             zComp = 5.0;
-        }
+        }*/
+
         sf::CircleShape sym(zComp);
-        sym.setOrigin(zComp, zComp);
+        if (zComp <= 2) {
+            sym.setOutlineColor(sf::Color::Blue);
+            sym.setRadius(5);
+        } else if (zComp <= 5) {
+            sym.setOutlineColor(sf::Color::Yellow);
+            sym.setRadius(10);
+        } else {
+            sym.setOutlineColor(sf::Color::Red);
+            sym.setRadius(20);
+        }
+        sym.setOrigin(zComp + sym.getRadius() / 2, zComp - sym.getRadius() / 2);
         sym.setFillColor(sf::Color::White);
         sym.setPosition(where.xComponent, win.getSize().y - where.yComponent);
         sym.setOutlineThickness(2);
-        sym.setOutlineColor(sf::Color::Black);
         win.draw(sym);
         if(vec.zComponent < 0.0) {
             double lineLen = zComp / SQRT2;
@@ -217,7 +227,7 @@ namespace draw {
         win.draw(wire, 2, sf::Lines);
     }
 
-    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double>>& cache) {
+    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             sf::Vector2i position = sf::Mouse::getPosition();
             wir.addVertex(position.x, win.getSize().y - position.y);
