@@ -8,7 +8,7 @@
  */
 class longThinWire {
 
-  private:
+  public:
     double current; // Current through the wire in amperes
   public:
     vectorR3 direction; // The direction of the current in the infinite wire
