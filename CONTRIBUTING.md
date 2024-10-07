@@ -10,5 +10,5 @@
    *More information to be added later*
 
 commands to build/run project:
-	1. cmake --build build
-	2. ./build/enm_learning_aid
+	1) cmake --build build
+	2) ./build/enm_learning_aid
