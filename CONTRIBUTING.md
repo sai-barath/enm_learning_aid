@@ -8,3 +8,7 @@
 6. Please name the directory you build the project in "build". This is necessary to ensure that git ignores these files, since we don't want this diectory to become a part of the repository. 
 
    *More information to be added later*
+
+commands to build/run project:
+	1. cmake --build build
+	2. ./build/enm_learning_aid
