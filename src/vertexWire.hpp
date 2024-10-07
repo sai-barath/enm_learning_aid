@@ -51,7 +51,7 @@ vectorR3 wireOfVertices::bField(const vectorR3& pos) const {
     vectorR3 dir = nextVertex - currVertex;
     // What follows is the solution of the Biot-Savart integral
     double integralConstant = (pos.yComponent * dir.xComponent) - (currVertex.yComponent * dir.xComponent) + (currVertex.xComponent * dir.yComponent) - (pos.xComponent * dir.yComponent); 
-    double a = -dir.xComponent, b = pos.xComponent - currVertex.xComponent, c = -dir.yComponent, d = pos.yComponent - pos.yComponent;
+    double a = -dir.xComponent, b = pos.xComponent - currVertex.xComponent, c = -dir.yComponent, d = pos.yComponent - currVertex.yComponent;
     double bcAd = 1.0 / (((b * c) - (a * d)) * ((b * c) - (a * d)));
     double combinedConstant = integralConstant * currentConstant * bcAd;
     double numeratorOne = (a * a) + (a * b) + ((c + d) * c);
