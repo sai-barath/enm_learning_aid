@@ -206,7 +206,14 @@ namespace draw {
                 draw::intoOut(win, pos, bField, wir.current);
             }
         } 
-        win.draw(wire, 2, sf::Lines);
+        sf::RectangleShape thickLine;
+        float length = sqrt(maxX*maxX + (maxY-win.getSize().y) * (maxY-win.getSize().y));
+        thickLine.setSize(sf::Vector2f(length, 5));
+        thickLine.setRotation(angle);
+        thickLine.setPosition(0, win.getSize().y);
+        thickLine.setFillColor(sf::Color::Black);
+        win.draw(thickLine);
+        //win.draw(wire , 2, sf::Lines);
 
         double triangleSize = 10.0;
         for (double xPos = 0.0; xPos < maxX; xPos += (maxX / 5)) {
