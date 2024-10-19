@@ -22,11 +22,13 @@ namespace draw {
         int triangleSize = 10;
         vectorR3 start(begin.xComponent, win.getSize().y - begin.yComponent, 0);
         vectorR3 vec(vect.xComponent, -vect.yComponent, 0);
+
         if(vec.magSquared() > 6400) {
             vec *= (80 / vec.magnitude());
         } else if(vec.magSquared() < 100) {
             vec *= (10 / vec.magnitude());
         }
+        triangleSize = vec.magnitude()/5;
         sf::Vertex line[] =
         {
             sf::Vertex(sf::Vector2f(start.xComponent, start.yComponent), sf::Color::Black),
