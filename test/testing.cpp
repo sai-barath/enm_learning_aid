@@ -117,14 +117,14 @@ TEST(bfieldtest, two_dimensions) {
 TEST(vwiretest, square) {
     wireOfVertices wir(1.0);
     wir.vertices.push_back(vectorR3(0, 0, 0));
-    wir.vertices.push_back(vectorR3(100, 0, 0));
-    wir.vertices.push_back(vectorR3(100, 100, 0));
     wir.vertices.push_back(vectorR3(0, 100, 0));
+    wir.vertices.push_back(vectorR3(100, 100, 0));
+    wir.vertices.push_back(vectorR3(100, 0, 0));
     vectorR3 p1 = wir.bField(vectorR3(50, 50, 0));
     vectorR3 p2 = wir.bField(vectorR3(150, 50, 0));
     vectorR3 p3 = wir.bField(vectorR3(50, 150, 0));
     vectorR3 p4 = wir.bField(vectorR3(150, 150, 0));
-    EXPECT_NEAR(p1.zComponent, 0, 0.001);
+    EXPECT_NEAR(p1.zComponent, -1.134e-8, 1e-9);
     EXPECT_NEAR(p2.zComponent, 0, 0.001);
     EXPECT_NEAR(p3.zComponent, 0, 0.001);
     EXPECT_NEAR(p4.zComponent, 0, 0.001);
