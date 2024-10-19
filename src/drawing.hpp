@@ -75,6 +75,7 @@ namespace draw {
     
     }
 
+
     /**
      * Draw a vector with only a z-component
      *
@@ -100,7 +101,6 @@ namespace draw {
             color = sf::Color::Red;
             scalingFactor = 16;
         }
-
         sf::CircleShape sym(zComp);
         sym.setRadius(scalingFactor);
         sym.setOutlineColor(color);
@@ -170,6 +170,28 @@ namespace draw {
         }
     }
 
+    double computeDistanceFromWire(const vectorR3& pos, const longThinWire& wir) {
+    // p1: A point on the wire (you can use the wire's starting point)
+    vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+
+    // p2: The position of the vector (pos in this case)
+    vectorR3 p2 = pos;
+
+    // d: The direction vector of the wire
+    vectorR3 d = wir.direction;
+
+    // Compute the vector from p1 to p2
+    vectorR3 p1_to_p2 = p2 - p1;
+
+    // Compute the cross product of d and (p2 - p1)
+    vectorR3 crossProduct = d.cross(p1_to_p2);
+
+    // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
+    double distance = crossProduct.magnitude() / d.magnitude();
+
+    return distance;
+}
+
     /**
      * Draw an arbitrarily long wire and its magnetic field
      *
@@ -202,12 +224,15 @@ namespace draw {
             for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / 40.0)) {
                 vectorR3 pos(i, j, 0);
                 vectorR3 bField = wir.computeBField(pos);
-                //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;   
+                //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
+                 if (computeDistanceFromWire(pos,wir) > 20){
                 draw::intoOut(win, pos, bField, wir.current);
+                 }
             }
         } 
         sf::RectangleShape thickLine;
         float length = sqrt(maxX*maxX + (maxY-win.getSize().y) * (maxY-win.getSize().y));
+        thickLine.setOrigin(0, 5 / 2.0f);
         thickLine.setSize(sf::Vector2f(length, 5));
         thickLine.setRotation(angle);
         thickLine.setPosition(0, win.getSize().y);
