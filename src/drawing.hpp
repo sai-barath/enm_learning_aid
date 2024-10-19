@@ -198,7 +198,7 @@ namespace draw {
      * @param win The window to draw on
      * @param wir The wire
      */
-    void drawBField(sf::RenderWindow& win, const longThinWire& wir) {
+    void drawBField(sf::RenderWindow& win, const longThinWire& wir,const float d = 32) {
         double windowSlopeFactor = win.getSize().y / win.getSize().x;
         double slope = wir.direction.yComponent / wir.direction.xComponent;
         double maxX;
@@ -220,8 +220,8 @@ namespace draw {
         double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
 
         //Draws every node in the grid representing the magnetic field
-        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / 40.0)) {
-            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / 40.0)) {
+        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280/d))) {
+            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720/d))) {
                 vectorR3 pos(i, j, 0);
                 vectorR3 bField = wir.computeBField(pos);
                 //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
