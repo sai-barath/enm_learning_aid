@@ -220,8 +220,8 @@ namespace draw {
         double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
 
         //Draws every node in the grid representing the magnetic field
-        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280/d))) {
-            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720/d))) {
+        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280 / d))) {
+            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720 / d))) {
                 vectorR3 pos(i, j, 0);
                 vectorR3 bField = wir.computeBField(pos);
                 //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
@@ -240,6 +240,10 @@ namespace draw {
         win.draw(thickLine);
         //win.draw(wire , 2, sf::Lines);
 
+        if (wir.current < 0) {
+            angle = std::fmod(angle + 180, 360);
+        }
+
         double triangleSize = 10.0;
         for (double xPos = 0.0; xPos < maxX; xPos += (maxX / 5)) {
 
@@ -254,7 +258,6 @@ namespace draw {
                 newTriangleOrigin.y += trianglePoint.y;
             }
             triangle.setOrigin(newTriangleOrigin.x / 3, newTriangleOrigin.y / 3);
-            
             triangle.setFillColor(sf::Color::Red);
             triangle.rotate(angle + 90);
             triangle.setPosition(xPos, win.getSize().y - (slope * xPos));
