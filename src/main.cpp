@@ -70,10 +70,7 @@ void vertexWire() {
      * Cache will hold z-Component of magnetic field at each location on screen
      * Will only be recomputed each time a new vertex is added
      */
-    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1);
-    for(int i = 0; i < cache.size(); i++) {
-        cache[i].reserve((win.getSize().y / 100) + 1);
-    }
+    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1, std::vector<double>((win.getSize().y / 100) + 1));
     wireOfVertices wir(curr);
     while (win.isOpen()) {
         win.clear(sf::Color::White);

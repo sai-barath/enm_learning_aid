@@ -226,7 +226,7 @@ namespace draw {
                 wir.addVertex(position.x, win.getSize().y - position.y);
             } else {
                 // Some vertices exist
-                vectorR3 last = *(--wir.vertices.end());
+                vectorR3 last = wir.vertices[wir.vertices.size() - 1];
                 // Check last vertex added to avoid duplication
                 if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
                     // If new click location is different from last
@@ -234,11 +234,13 @@ namespace draw {
                     // Recalculate b field and store in cache
                     std::cout << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
                     if(wir.vertices.size() >= 3) {
-                        for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
-                            for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
+                        for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                            for(int j = 0; j <= (win.getSize().y / 100); j++) {
                                 vectorR3 pos(i * 100, j * 100, 0.0);
                                 vectorR3 bField = wir.bField(pos);
+                                std::cout << " " << std::endl;
                                 cache[i][j] = bField.zComponent;
+                                std::cout << "inserting at (" << i << ", " << j << ") in a (" << cache.size() << ", " << cache[i].size() << ")" << std::endl; 
                             }
                         }
                     }
@@ -253,8 +255,8 @@ namespace draw {
             }
             wire[wir.vertices.size()] = wire[0];
             win.draw(wire, wir.vertices.size() + 1, sf::Lines);
-            for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
-                for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
+            for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                for(int j = 0; j <= (win.getSize().y / 100); j++) {
                     vectorR3 bField(0, 0, cache[i][j]);
                     vectorR3 pos(i * 100, j * 100, 0.0);
                     draw::intoOut(win, pos, bField);
