@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <ctime>
 
 namespace draw {
     /**
@@ -71,7 +72,7 @@ namespace draw {
             charge.setFillColor(sf::Color::Blue); 
             win.draw(charge);
         } else {
-            charge.setFillColor(sf::Color::Red);
+            charge.setFillColor(sf::Color::Green);
             win.draw(charge);
         } 
     
@@ -155,6 +156,79 @@ namespace draw {
                     draw::drawVector(win, board[i][j], efieldatpos);
                 }
             }
+        }
+    }
+
+    /**
+     * Draw a set of charges and their associated electric field magnitudes (heat map)
+     *
+     * @param charges  an std::vector consisting of the charges
+     */
+    void eFieldHeatMap(std::vector<pointCharge>& charges) {
+        sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
+        std::clock_t start = clock();
+        const int winX = win.getSize().x;
+        const int winY = win.getSize().y;
+        const int winSize = winX * winY;
+        // Texture for heat values
+        sf::Texture heatTexture;
+        heatTexture.create(winX, winY);
+        // Create a RGBA pixel array (4 components) for the texture, use just the red channel for heat values
+        std::vector<sf::Uint8> pixels(winSize * 4);
+        for (int y = 0; y < winY; y++) {
+            for (int x = 0; x < winX; x++) {
+                int index = (y * winX  + x) * 4;
+                vectorR3 pos(x, win.getSize().y - y, 0);
+                vectorR3 E = charges[0].efield(pos);
+                for(size_t i = 1; i < charges.size(); i++) {
+                    E += charges[i].efield(pos);
+                }
+                double mag = E.magnitude() / 10;
+                if(mag > 255) mag = 255;
+                pixels[index] = static_cast<sf::Uint8>(mag); // set red channel
+                std::cout << "Inserting " << mag << std::endl;
+                pixels[index + 1] = 0;       
+                pixels[index + 2] = static_cast<sf::Uint8>(255 - mag);   
+                pixels[index + 3] = 100;
+            }
+        }
+        std::clock_t end = clock();
+        double time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        std::cout << "time: " << time << std::endl;
+        heatTexture.update(pixels.data());
+        sf::Shader shader;
+        /*const std::string SHADE = R"(
+            #version 330 core
+
+            in vec2 fragTexCoord;
+            out vec4 FragColor;
+
+            uniform sampler2D heatTexture;
+
+            void main() {
+                float heatValue = texture(heatTexture, fragTexCoord).r;
+                FragColor = vec4(heatValue, 0, 255.0 - heatValue, 0.5);
+            }
+        )";
+        if (!shader.loadFromMemory(SHADE, sf::Shader::Fragment)) {
+            std::cerr << "Can't load shader" << std::endl;
+        }
+        shader.setUniform("heatTexture", heatTexture);*/
+        sf::RectangleShape fullScreenRect(sf::Vector2f(1280, 720));
+        fullScreenRect.setFillColor(sf::Color::White);
+        fullScreenRect.setTexture(&heatTexture);
+        while (win.isOpen()) {
+            sf::Event event;
+            while (win.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    win.close();
+            }
+            win.clear(sf::Color::White);
+            win.draw(fullScreenRect);
+            for(int i = 0; i < charges.size(); i++) {
+                draw::drawCharge(win, charges[i]);
+            }
+            win.display();
         }
     }
 

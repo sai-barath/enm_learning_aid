@@ -14,32 +14,41 @@ void pointCharges() {
     while(numc <= 0) {
         std::cin >> numc;
     }
-    std::vector<pointCharge> charges;
+    std::vector<pointCharge> charges(numc);
     for(int i = 0; i < numc; i++) {
         double x = 0.0, y = 0.0, c = 0.0;
         std::cout << "Enter x y charge (space separated) for charge #" << i + 1 << std::endl;
         std::cin >> x >> y >> c;
         charges.push_back(pointCharge(x, y, 0.0, c));
     }
-    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
-    int i = 0;
-    std::cout << "Units used are meters, coulombs, and newtons, chages around the order of magnitude of 10^-4 work best " << std::endl;
-    while (win.isOpen()) {
-        win.clear(sf::Color::White);
-        sf::Event e;
-        while (win.pollEvent(e)) {
-            if (e.type == sf::Event::Closed) {
-                win.close();
-            }
-        }
-        if(i == 0) {
-            draw::drawElecField(win, charges);
-        } else {
-            draw::drawElecField(win, charges);
-        }
-        win.display();
-        i++;
+    int mode = -1;
+    std::cout << "(1) Field vectors" << std::endl << "(2) Heat map" << std::endl;
+    while(mode != 1 && mode != 2) {
+        std::cin >> mode;
     }
+    if(mode == 1) {
+        sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
+        int i = 0;
+        std::cout << "Units used are meters, coulombs, and newtons, chages around the order of magnitude of 10^-4 work best " << std::endl;
+        while (win.isOpen()) {
+            win.clear(sf::Color::White);
+            sf::Event e;
+            while (win.pollEvent(e)) {
+                if (e.type == sf::Event::Closed) {
+                    win.close();
+                }
+            }
+            if(i == 0) {
+                draw::drawElecField(win, charges);
+            } else {
+                draw::drawElecField(win, charges);
+            }
+            win.display();
+            i++;
+        }
+    } else {
+        draw::eFieldHeatMap(charges);
+    }  
 }
 
 void drawB() {

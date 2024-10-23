@@ -7,10 +7,15 @@ class pointCharge {
     public:
         vectorR3 pos;
         double charge;
+        pointCharge();
         pointCharge(const vectorR3& p, double c);
         pointCharge(double x, double y, double z, double c);
         vectorR3 efield(const vectorR3& loc) const;
 };
+
+pointCharge::pointCharge() {
+    charge = 0.0;
+}
 
 pointCharge::pointCharge(const vectorR3& p, double c) {
     this->charge = c;
