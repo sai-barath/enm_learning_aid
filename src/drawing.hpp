@@ -227,9 +227,9 @@ namespace draw {
                 vectorR3 pos(i, j, 0);
                 vectorR3 bField = wir.computeBField(pos);
                 //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
-                 if (computeDistanceFromWire(pos,wir) > 20){
-                draw::intoOut(win, pos, bField, wir.current);
-                 }
+                if (computeDistanceFromWire(pos,wir) > 20){
+                    draw::intoOut(win, pos, bField, wir.current);
+                }
             }
         } 
         sf::RectangleShape thickLine;
