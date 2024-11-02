@@ -284,12 +284,12 @@ namespace draw {
             }
         }
         if(wir.vertices.size() >= 3) {
-            sf::Vertex wire[wir.vertices.size() + 1];
+            /*sf::Vertex wire[wir.vertices.size() + 1];
             for(int i = 0; i < wir.vertices.size(); i++) {
                 wire[i] = sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black);
             }
             wire[wir.vertices.size()] = wire[0];
-            win.draw(wire, wir.vertices.size() + 1, sf::Lines);
+            win.draw(wire, wir.vertices.size() + 1, sf::Lines);*/
         }
     }
 };
