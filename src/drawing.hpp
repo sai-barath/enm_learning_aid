@@ -200,7 +200,7 @@ namespace draw {
      * @param win The window to draw on
      * @param wir The wire
      */
-    void drawBField(sf::RenderWindow& win, const longThinWire& wir,const float d = 32) {
+    void drawBField(sf::RenderWindow& win, const longThinWire& wir,  int& mode, const float d = 32) {
         double windowSlopeFactor = win.getSize().y / win.getSize().x;
         double slope = wir.direction.yComponent / wir.direction.xComponent;
         double maxX;
@@ -222,16 +222,57 @@ namespace draw {
         double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
 
         //Draws every node in the grid representing the magnetic field
-        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280 / d))) {
-            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720 / d))) {
-                vectorR3 pos(i, j, 0);
-                vectorR3 bField = wir.computeBField(pos);
-                //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
-                if (computeDistanceFromWire(pos,wir) > 20){
-                    draw::intoOut(win, pos, bField, wir.current);
+        if (mode == 1){
+            for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280 / d))) {
+                for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720 / d))) {
+                    vectorR3 pos(i, j, 0);
+                    vectorR3 bField = wir.computeBField(pos);
+                    //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
+                    if (computeDistanceFromWire(pos,wir) > 20){
+                        draw::intoOut(win, pos, bField, wir.current);
+                    }
                 }
             }
-        } 
+        }
+        else{
+            std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
+            int pixel_index = 0;
+            for (int i = 0; i < win.getSize().x; i++){
+                for (int j = 0; j < win.getSize().y; j++){
+                    vectorR3 pos(i, j, 0);
+                    vectorR3 bField = wir.computeBField(pos);
+                    if (bField.zComponent < 0){
+                        std::cout << bField.zComponent << std::endl;
+                        double bMagnitude = bField.magnitude() * 1e9;
+                        if (bMagnitude > 255) bMagnitude = 255;
+                        pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude); // set red channel
+                        std::cout << "Inserting " << bMagnitude << std::endl;
+                        pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
+                        pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
+                        pixels[pixel_index + 3] = 100;
+                        pixel_index += 4;
+                    }
+                    else{
+                        double bMagnitude = bField.magnitude() * 1e9;
+                        if (bMagnitude > 255) bMagnitude = 255;
+                        pixels[pixel_index] = static_cast<sf::Uint8>(255);
+                        std::cout << "Inserting " << bMagnitude << std::endl;
+                        pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
+                        pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
+                        pixels[pixel_index + 3] = 100;
+                        pixel_index += 4;
+                    }
+                }
+            }
+            sf::Texture heatTextureB;
+            heatTextureB.create(win.getSize().x, win.getSize().y);
+            heatTextureB.update(pixels.data());
+            sf::RectangleShape fullScreenRect(sf::Vector2f(win.getSize().x, win.getSize().y));
+            fullScreenRect.setFillColor(sf::Color::White);
+            fullScreenRect.setTexture(&heatTextureB);
+            win.clear(sf::Color::White);
+            win.draw(fullScreenRect);
+        }
         sf::RectangleShape thickLine;
         float length = sqrt(maxX*maxX + (maxY-win.getSize().y) * (maxY-win.getSize().y));
         thickLine.setOrigin(0, 5 / 2.0f);
