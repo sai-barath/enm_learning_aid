@@ -239,20 +239,20 @@ namespace draw {
             int pixel_index = 0;
             for (int i = 0; i < win.getSize().y; i++){
                 for (int j = 0; j < win.getSize().x; j++){
-                    int pixel_index = (i * win.getSize().x  + j) * 4;
+                    pixel_index = (i * win.getSize().x  + j) * 4;
                     // vectorR3 pos(i, j, 0);
-                    vectorR3 pos(j, win.getSize().x - i, 0);
+                    vectorR3 pos(j, win.getSize().y - i, 0);
                     vectorR3 bField = wir.computeBField(pos);
                     if (bField.zComponent < 0){
-                        std::cout << bField.zComponent << std::endl;
+                        // std::cout << bField.zComponent << std::endl;
                         double bMagnitude = bField.magnitude() * 1e9;
                         if (bMagnitude > 255) bMagnitude = 255;
                         pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude); // set red channel
                         std::cout << "Inserting " << bMagnitude << std::endl;
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
-                        pixels[pixel_index + 3] = 100;
-                        pixel_index += 4;
+                        pixels[pixel_index + 3] = 255;
+                        // pixel_index += 4;
                     }
                     else{
                         double bMagnitude = bField.magnitude() * 1e9;
@@ -261,8 +261,8 @@ namespace draw {
                         std::cout << "Inserting " << bMagnitude << std::endl;
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
-                        pixels[pixel_index + 3] = 100;
-                        pixel_index += 4;
+                        pixels[pixel_index + 3] = 255;
+                        // pixel_index += 4;
                     }
                 }
             }
@@ -303,7 +303,12 @@ namespace draw {
                 newTriangleOrigin.y += trianglePoint.y;
             }
             triangle.setOrigin(newTriangleOrigin.x / 3, newTriangleOrigin.y / 3);
-            triangle.setFillColor(sf::Color::Red);
+            if (mode == 1){
+                triangle.setFillColor(sf::Color::Red);
+            }
+            else{
+                triangle.setFillColor(sf::Color::Green);
+            }
             triangle.rotate(angle + 90);
             triangle.setPosition(xPos, win.getSize().y - (slope * xPos));
             win.draw(triangle);
