@@ -46,6 +46,9 @@ void drawB() {
     double x = 1.0,  y = 1.0, curr = 0.0;
     std::cout << "Enter x-dir, y-dir, current" << std::endl;
     std::cin >> x >> y >> curr;
+    std::cout << "(1) Field vectors" << std::endl << "(2) Heat map" << std::endl;
+    int mode = 0;
+    std::cin >> mode;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
     int i = 0;
     clock_t startTime = clock();
@@ -58,7 +61,7 @@ void drawB() {
             }
         }
         longThinWire wir(x, y, curr);
-        draw::drawBField(win, wir);
+        draw::drawBField(win, wir, mode);
         win.display();
         //std::cout << "Drawing frame " + std::to_string(i) << std::endl;
         //std::cout << "FPS: " + std::to_string(i / (float(clock() - startTime) / 1000000)) << std::endl;
