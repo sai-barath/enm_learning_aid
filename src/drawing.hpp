@@ -239,6 +239,7 @@ namespace draw {
             int pixel_index = 0;
             for (int i = 0; i < win.getSize().x; i++){
                 for (int j = 0; j < win.getSize().y; j++){
+                    int pixel_index = (j * win.getSize().x  + i) * 4;
                     vectorR3 pos(i, j, 0);
                     vectorR3 bField = wir.computeBField(pos);
                     if (bField.zComponent < 0){
