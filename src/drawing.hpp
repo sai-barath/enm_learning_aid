@@ -237,10 +237,11 @@ namespace draw {
         else{
             std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
             int pixel_index = 0;
-            for (int i = 0; i < win.getSize().x; i++){
-                for (int j = 0; j < win.getSize().y; j++){
-                    int pixel_index = (j * win.getSize().x  + i) * 4;
-                    vectorR3 pos(i, j, 0);
+            for (int i = 0; i < win.getSize().y; i++){
+                for (int j = 0; j < win.getSize().x; j++){
+                    int pixel_index = (i * win.getSize().x  + j) * 4;
+                    // vectorR3 pos(i, j, 0);
+                    vectorR3 pos(j, win.getSize().x - i, 0);
                     vectorR3 bField = wir.computeBField(pos);
                     if (bField.zComponent < 0){
                         std::cout << bField.zComponent << std::endl;
