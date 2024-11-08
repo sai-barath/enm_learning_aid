@@ -220,30 +220,26 @@ namespace draw {
     void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double>>& cache) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             // Mouse button pressed, may need to add new vertex
-            sf::Vector2i position = sf::Mouse::getPosition();
-            if(position.x > win.getSize().x || position.y >  win.getSize().y) {
-                std::cout << "last click was off screen, try again" << std::endl;
+            sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
+            if(wir.vertices.empty()) { 
+                // If no vertices exist, we can add one without any other checks, no B-field recompute needed
+                std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+                wir.addVertex(position.x, win.getSize().y - position.y);
             } else {
-                if(wir.vertices.empty()) { 
-                    // If no vertices exist, we can add one without any other checks, no B-field recompute needed
+                // Some vertices exist
+                vectorR3 last = wir.vertices[wir.vertices.size() - 1];
+                // Check last vertex added to avoid duplication
+                if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
+                    // If new click location is different from last
                     std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
                     wir.addVertex(position.x, win.getSize().y - position.y);
-                } else {
-                    // Some vertices exist
-                    vectorR3 last = wir.vertices[wir.vertices.size() - 1];
-                    // Check last vertex added to avoid duplication
-                    if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
-                        // If new click location is different from last
-                        std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-                        wir.addVertex(position.x, win.getSize().y - position.y);
-                        // Recalculate b field and store in cache
-                        if(wir.vertices.size() >= 3) {
-                            for(int i = 0; i <= (win.getSize().x / 100); i++) {
-                                for(int j = 0; j <= (win.getSize().y / 100); j++) {
-                                    vectorR3 pos(i * 100, j * 100, 0.0);
-                                    vectorR3 bField = wir.bField(pos);
-                                    cache[i][j] = bField.zComponent;
-                                }
+                    // Recalculate b field and store in cache
+                    if(wir.vertices.size() >= 3) {
+                        for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                            for(int j = 0; j <= (win.getSize().y / 100); j++) {
+                                vectorR3 pos(i * 100, j * 100, 0.0);
+                                vectorR3 bField = wir.bField(pos);
+                                cache[i][j] = bField.zComponent;
                             }
                         }
                     }
