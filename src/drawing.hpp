@@ -235,24 +235,22 @@ namespace draw {
             }
         }
         else{
+            // sets each pixel to a color based on the magnitude and direction (blue = into the screen, red = out of the screen)
             std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
             int pixel_index = 0;
             for (int i = 0; i < win.getSize().y; i++){
                 for (int j = 0; j < win.getSize().x; j++){
                     pixel_index = (i * win.getSize().x  + j) * 4;
-                    // vectorR3 pos(i, j, 0);
                     vectorR3 pos(j, win.getSize().y - i, 0);
                     vectorR3 bField = wir.computeBField(pos);
                     if (bField.zComponent < 0){
-                        // std::cout << bField.zComponent << std::endl;
                         double bMagnitude = bField.magnitude() * 1e9;
                         if (bMagnitude > 255) bMagnitude = 255;
-                        pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude); // set red channel
+                        pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude);
                         std::cout << "Inserting " << bMagnitude << std::endl;
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
                         pixels[pixel_index + 3] = 255;
-                        // pixel_index += 4;
                     }
                     else{
                         double bMagnitude = bField.magnitude() * 1e9;
@@ -262,7 +260,6 @@ namespace draw {
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 3] = 255;
-                        // pixel_index += 4;
                     }
                 }
             }
@@ -274,6 +271,63 @@ namespace draw {
             fullScreenRect.setTexture(&heatTextureB);
             win.clear(sf::Color::White);
             win.draw(fullScreenRect);
+
+            // draw the legend for blue = into and red = out of, bottom right part of the window
+
+            // outline box for the legend
+            sf::RectangleShape legendOutline(sf::Vector2f(50, 50));
+            legendOutline.setOrigin(50, 50);
+            legendOutline.setFillColor(sf::Color::White);
+            legendOutline.setOutlineThickness(1.75);
+            legendOutline.setOutlineColor(sf::Color::Black);
+            legendOutline.setPosition(sf::Vector2f(win.getSize().x - 25, win.getSize().y - 25));
+            win.draw(legendOutline);
+
+            // blue box for into the screen
+            sf::RectangleShape blueLegendBox(sf::Vector2f(15, 15));
+            blueLegendBox.setFillColor(sf::Color::Blue);
+            blueLegendBox.setPosition(win.getSize().x - 70, win.getSize().y - 68);
+            win.draw(blueLegendBox);
+
+            // into next to blue
+            sf::CircleShape intoOutline;
+            intoOutline.setPosition(win.getSize().x - 45, win.getSize().y - 68);
+            intoOutline.setFillColor(sf::Color::White);
+            intoOutline.setOutlineThickness(2);
+            intoOutline.setRadius(7.5);
+            intoOutline.setOutlineColor(sf::Color::Black);
+            sf::Vertex line1[] = {
+                sf::Vertex(sf::Vector2f(win.getSize().x - 30, win.getSize().y - 60.5), sf::Color::Black),
+                sf::Vertex(sf::Vector2f(win.getSize().x - 45, win.getSize().y - 60.5), sf::Color::Black)
+            };
+            sf::Vertex line2[] = {
+                sf::Vertex(sf::Vector2f(win.getSize().x - 37.5, win.getSize().y - 68), sf::Color::Black),
+                sf::Vertex(sf::Vector2f(win.getSize().x - 37.5, win.getSize().y - 53), sf::Color::Black)
+            };
+            win.draw(intoOutline);
+            win.draw(line1, 10, sf::Lines);
+            win.draw(line2, 10, sf::Lines);
+
+            // red box for out of screen
+            sf::RectangleShape redLegendBox(sf::Vector2f(15, 15));
+            redLegendBox.setFillColor(sf::Color::Red);
+            redLegendBox.setPosition(win.getSize().x - 70, win.getSize().y - 48);
+            win.draw(redLegendBox);
+
+            //out of next to red
+            sf::CircleShape outofOutline;
+            outofOutline.setPosition(win.getSize().x - 45, win.getSize().y - 48);
+            outofOutline.setFillColor(sf::Color::White);
+            outofOutline.setOutlineThickness(2);
+            outofOutline.setRadius(7.5);
+            outofOutline.setOutlineColor(sf::Color::Black);
+            win.draw(outofOutline);
+            
+            sf::CircleShape dot(3);
+            dot.setOrigin(3, 3);
+            dot.setPosition(win.getSize().x - 37.5, win.getSize().y - 40.5);
+            dot.setFillColor(sf::Color::Black);
+            win.draw(dot);
         }
         sf::RectangleShape thickLine;
         float length = sqrt(maxX*maxX + (maxY-win.getSize().y) * (maxY-win.getSize().y));
