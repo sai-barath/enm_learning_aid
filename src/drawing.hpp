@@ -221,26 +221,29 @@ namespace draw {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             // Mouse button pressed, may need to add new vertex
             sf::Vector2i position = sf::Mouse::getPosition();
-            if(wir.vertices.empty()) { 
-                // If no vertices exist, we can add one without any other checks, no B-field recompute needed
-                wir.addVertex(position.x, win.getSize().y - position.y);
+            if(position.x > win.getSize().x || position.y >  win.getSize().y) {
+                std::cout << "last click was off screen, try again" << std::endl;
             } else {
-                // Some vertices exist
-                vectorR3 last = wir.vertices[wir.vertices.size() - 1];
-                // Check last vertex added to avoid duplication
-                if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
-                    // If new click location is different from last
+                if(wir.vertices.empty()) { 
+                    // If no vertices exist, we can add one without any other checks, no B-field recompute needed
+                    std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
                     wir.addVertex(position.x, win.getSize().y - position.y);
-                    // Recalculate b field and store in cache
-                    std::cout << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-                    if(wir.vertices.size() >= 3) {
-                        for(int i = 0; i <= (win.getSize().x / 100); i++) {
-                            for(int j = 0; j <= (win.getSize().y / 100); j++) {
-                                vectorR3 pos(i * 100, j * 100, 0.0);
-                                vectorR3 bField = wir.bField(pos);
-                                std::cout << " " << std::endl;
-                                cache[i][j] = bField.zComponent;
-                                std::cout << "inserting at (" << i << ", " << j << ") in a (" << cache.size() << ", " << cache[i].size() << ")" << std::endl; 
+                } else {
+                    // Some vertices exist
+                    vectorR3 last = wir.vertices[wir.vertices.size() - 1];
+                    // Check last vertex added to avoid duplication
+                    if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
+                        // If new click location is different from last
+                        std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+                        wir.addVertex(position.x, win.getSize().y - position.y);
+                        // Recalculate b field and store in cache
+                        if(wir.vertices.size() >= 3) {
+                            for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                                for(int j = 0; j <= (win.getSize().y / 100); j++) {
+                                    vectorR3 pos(i * 100, j * 100, 0.0);
+                                    vectorR3 bField = wir.bField(pos);
+                                    cache[i][j] = bField.zComponent;
+                                }
                             }
                         }
                     }
@@ -249,12 +252,12 @@ namespace draw {
         }
         if(wir.vertices.size() >= 3) {
             // Draw wire and display b-field if enough vertices
-            sf::Vertex* wire = new sf::Vertex[wir.vertices.size() + 1];
+            int numVert = wir.vertices.size();
             for(int i = 0; i < wir.vertices.size(); i++) {
-                wire[i] = sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black);
+                sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
+                win.draw(wirSeg, 2, sf::Lines);
+                win.display();
             }
-            wire[wir.vertices.size()] = wire[0];
-            win.draw(wire, wir.vertices.size() + 1, sf::Lines);
             for(int i = 0; i <= (win.getSize().x / 100); i++) {
                 for(int j = 0; j <= (win.getSize().y / 100); j++) {
                     vectorR3 bField(0, 0, cache[i][j]);
@@ -262,7 +265,7 @@ namespace draw {
                     draw::intoOut(win, pos, bField);
                 }
             }
-            delete[] wire;
+            win.display();
         }
     }
 };
