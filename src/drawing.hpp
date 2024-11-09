@@ -252,7 +252,6 @@ namespace draw {
             for(int i = 0; i < wir.vertices.size(); i++) {
                 sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
                 win.draw(wirSeg, 2, sf::Lines);
-                win.display();
             }
             for(int i = 0; i <= (win.getSize().x / 100); i++) {
                 for(int j = 0; j <= (win.getSize().y / 100); j++) {
@@ -261,7 +260,6 @@ namespace draw {
                     draw::intoOut(win, pos, bField);
                 }
             }
-            win.display();
         }
     }
 };
