@@ -5,6 +5,7 @@
 #include "drawing.hpp"
 #include "pointCharge.hpp"
 #include "bField.hpp"
+#include "edgeEffects.hpp"
 #include <vector>
 
 
@@ -94,16 +95,23 @@ void vertexWire() {
     }
 }
 
+void edgeEffects() {
+    //TODO: prompt for user input
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
+}
+
 int main() {
     std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl << "(3) Wire of vertices" << std::endl; 
     int choice = -1;
     std::cin >> choice;
-    if(choice == 1) {
+    if (choice == 1) {
         pointCharges();
-    } else if(choice == 2) {
+    } else if (choice == 2) {
         drawB();
-    } else if(choice == 3) {
+    } else if (choice == 3) {
         vertexWire();
+    } else if (choice == 4) {
+        edgeEffects();  
     } else {
         return 1;
     }
