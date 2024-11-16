@@ -75,7 +75,6 @@ namespace draw {
             charge.setFillColor(sf::Color::Red);
             win.draw(charge);
         } 
-    
     }
 
 
@@ -174,26 +173,20 @@ namespace draw {
     }
 
     double computeDistanceFromWire(const vectorR3& pos, const longThinWire& wir) {
-    // p1: A point on the wire (you can use the wire's starting point)
-    vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
-
-    // p2: The position of the vector (pos in this case)
-    vectorR3 p2 = pos;
-
-    // d: The direction vector of the wire
-    vectorR3 d = wir.direction;
-
-    // Compute the vector from p1 to p2
-    vectorR3 p1_to_p2 = p2 - p1;
-
-    // Compute the cross product of d and (p2 - p1)
-    vectorR3 crossProduct = d.cross(p1_to_p2);
-
-    // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
-    double distance = crossProduct.magnitude() / d.magnitude();
-
-    return distance;
-}
+        // p1: A point on the wire (you can use the wire's starting point)
+        vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+        // p2: The position of the vector (pos in this case)
+        vectorR3 p2 = pos;
+        // d: The direction vector of the wire
+        vectorR3 d = wir.direction;
+        // Compute the vector from p1 to p2
+        vectorR3 p1_to_p2 = p2 - p1;
+        // Compute the cross product of d and (p2 - p1)
+        vectorR3 crossProduct = d.cross(p1_to_p2);
+        // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
+        double distance = crossProduct.magnitude() / d.magnitude();
+        return distance;
+    }
 
     /**
      * Draw an arbitrarily long wire and its magnetic field
@@ -413,8 +406,16 @@ namespace draw {
             }
         }
     }
-
-    void drawCircularDisk(sf::RenderWindow& win) {
-
+    /**
+     * Draw a 2D vector on the screen
+     *
+     * @param win The window to draw on
+     * @param begin start point
+     * @param vect actual vector
+     */
+    void drawCircularDisk(sf::RenderWindow& win, std::vector<disk>& disks) {
+        for(int i = 0; i < disks.size(); i++) {
+            sf::CircleShape charge(disks[i].rad);
+        }
     }
 };

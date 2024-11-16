@@ -24,6 +24,6 @@ class disk {
          * @param pos: The position
          */
         vectorR3 efield(const vectorR3& pos) {
-            return vectorR3(0.0, 0.0, 0.0);
+            return vectorR3(10.0, 10.0, 0.0);
         }
 };
