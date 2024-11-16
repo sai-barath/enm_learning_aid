@@ -10,35 +10,25 @@
 #include <sstream>
 sf::Font font;
     
-void textSet(sf::Text &text,int x,int y,std::string str,sf::Font font){
-
-    
+void textSet(sf::Text &text,int x,int y,std::string str,sf::Font font,int charSize){
     text.setFont(font);
     text.setFillColor(sf::Color::Black);
-    text.setString("Point Charges       B-fields        Wire of Vertices");
-    text.setCharacterSize(24);
-    text.setPosition(30,0);
+    text.setString(str);
+    text.setCharacterSize(charSize);
+    text.setPosition(x,y);
 }
 
 
 void pointCharges() {
     sf::Text title;
-    title.setFont(font);
-    title.setFillColor(sf::Color::Black);
-    title.setString("Input for Point Charges");
-    title.setCharacterSize(26);
-    title.setPosition(500-title.getLocalBounds().width/2,0);
-    sf::RenderWindow infowindow(
-        sf::VideoMode(1000,200),
-        "Input");
+    textSet(title,500-title.getLocalBounds().width/2,0,"Input for Point Charges", font, 26);
+    sf::RenderWindow infowindow(sf::VideoMode(1000,200), "Input");
     sf::Text instr;
     textbox numcharges(0, 40, font,"Enter num charges: ");
     numcharges.select();
     textbox eachcharge(0,80,font,"Enter x y charge (space seperated) for ");
     int chargenum = 1;
-
     std::vector<pointCharge> charges;
-
     while (infowindow.isOpen()) {
         sf::Event event;
         if(numcharges.isdone()&& !eachcharge.isselected()) {

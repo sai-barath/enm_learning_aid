@@ -11,8 +11,6 @@
 
 class textbox{
     public:
-
-
         textbox(int x, int y, sf::Font &font, std::string init){
             text.setFont(font);
             text.setFillColor(sf::Color::Black);
@@ -23,7 +21,6 @@ class textbox{
             this->init = init;
             selected = false;
         }
-
         void input(sf::Event input) {
            
             if(input.type == sf::Event::TextEntered && selected) {
@@ -56,22 +53,6 @@ class textbox{
         std::string getInput() {
             return chars;
         }
-        // sf::String gettext() {
-        //     if(selected){
-        //         sf::String s = (chars+"_").c_str();
-        //         text.setString(s);
-        //         if(chars!=""){
-        //             std::string s = text.getString();
-        //             std::cout << s << std::endl;
-        //         }
-        //         return s;
-        //     }
-        //     else{
-
-        //         sf::String s = (chars).c_str();
-        //         return s;
-        //     }
-        // }
         void draw(sf::RenderWindow &window){
 
             if(selected){
@@ -79,7 +60,6 @@ class textbox{
                 text.setString(s);
                 if(chars!=""){
                     std::string s = text.getString();
-                    //std::cout << s << std::endl;
                 }
                 
             }
