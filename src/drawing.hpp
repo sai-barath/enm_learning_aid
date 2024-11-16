@@ -6,6 +6,7 @@
 #include "pointCharge.hpp"
 #include "bField.hpp"
 #include "vertexWire.hpp"
+#include "disk.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -411,5 +412,9 @@ namespace draw {
                 }
             }
         }
+    }
+
+    void drawCircularDisk(sf::RenderWindow& win) {
+
     }
 };
