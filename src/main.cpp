@@ -10,7 +10,7 @@
 #include <sstream>
 sf::Font font;
     
-void textSet(sf::Text &text,int x,int y,std::string str,sf::Font font,int charSize){
+void textSet(sf::Text &text,int x,int y,std::string str,sf::Font &font,int charSize){
     text.setFont(font);
     text.setFillColor(sf::Color::Black);
     text.setString(str);
@@ -26,22 +26,23 @@ void pointCharges() {
     sf::Text instr;
     textbox numcharges(0, 40, font,"Enter num charges: ");
     numcharges.select();
-    textbox eachcharge(0,80,font,"Enter x y charge (space seperated) for ");
     int chargenum = 1;
     std::vector<pointCharge> charges;
+    textbox eachcharge;
+    bool started = false;
     while (infowindow.isOpen()) {
         sf::Event event;
-        if(numcharges.isdone()&& !eachcharge.isselected()) {
-            eachcharge.select();
-            eachcharge.setText("Enter x y charge (space seperated) for charge "+ std::to_string(chargenum)+": ");
+        if(numcharges.isdone() && !started) {
+            started = true;
+            eachcharge = textbox(0,80,font,"Enter x y charge (space seperated) for charge "+ std::to_string(chargenum)+": ");
         }
         while (infowindow.pollEvent(event)){
             if (event.type == sf::Event::Closed)
                 {infowindow.close();}
-            if( event.type == sf::Event::TextEntered && !numcharges.isdone()) {
+            if( event.type == sf::Event::TextEntered && !numcharges.isdone() || event.type == sf::Event::MouseButtonPressed) {
                 numcharges.input(event);
             }
-            if( event.type == sf::Event::TextEntered && !eachcharge.isdone()) {
+            if( event.type == sf::Event::TextEntered && !eachcharge.isdone()|| event.type == sf::Event::MouseButtonPressed) {
                 eachcharge.input(event);
             }
         }        
@@ -60,7 +61,7 @@ void pointCharges() {
             eachcharge = textbox(0, 80, font, "Enter x y charge (space seperated) for charge "+ std::to_string(chargenum)+": ");
             eachcharge.select();
         }
-        infowindow.clear(sf::Color(255,255,255)); 
+        infowindow.clear(sf::Color(200,200,200)); 
         numcharges.draw(infowindow);
         eachcharge.draw(infowindow);
         infowindow.draw(title);
@@ -119,7 +120,7 @@ void drawB() {
             ss >> x >> y >> curr;
             break;
         }
-        infowindow.clear(sf::Color(255,255,255)); 
+        infowindow.clear(sf::Color(200,200,200)); 
         input.draw(infowindow);
         infowindow.draw(title);
         infowindow.display();
@@ -173,7 +174,7 @@ void vertexWire() {
             ss >> curr;
             break;
         }
-        infowindow.clear(sf::Color(255,255,255)); 
+        infowindow.clear(sf::Color(200,200,200)); 
         input.draw(infowindow);
         infowindow.draw(title);
         infowindow.display();
@@ -237,7 +238,7 @@ int main() {
     sf::RenderWindow window(
         sf::VideoMode(560, 480),
         "E&M Learning Aid");
-    window.clear(sf::Color(255,255,255));
+    window.clear(sf::Color(200,200,200));
     while (window.isOpen()) {
 
         sf::Event event;
@@ -266,7 +267,7 @@ int main() {
 
         }
 
-        window.clear(sf::Color(255,255,255));
+        window.clear(sf::Color(200,200,200));
 
         window.draw(title);
         window.draw(text);
