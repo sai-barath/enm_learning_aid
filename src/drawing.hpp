@@ -407,7 +407,7 @@ namespace draw {
                 for(int j = 0; j <= (win.getSize().y / 100); j++) {
                     vectorR3 bField(0, 0, cache[i][j]);
                     vectorR3 pos(i * 100, j * 100, 0.0);
-                    draw::intoOut(win, pos, bField);
+                    draw::intoOut(win, pos, bField, wir.current);
                 }
             }
         }

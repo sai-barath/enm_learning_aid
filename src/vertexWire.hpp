@@ -5,9 +5,8 @@
  * A wire with various vertices and straight-line segments in between
  */
 class wireOfVertices {
-	private:
-		double current;
 	public:
+		double current;
 		std::vector<vectorR3> vertices;
 		/**
 		 * Create a wire of vertices
