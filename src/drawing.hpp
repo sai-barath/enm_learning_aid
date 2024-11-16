@@ -217,7 +217,7 @@ namespace draw {
         win.draw(wire, 2, sf::Lines);
     }
 
-    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double>>& cache) {
+    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             sf::Vector2i position = sf::Mouse::getPosition();
             wir.addVertex(position.x, win.getSize().y - position.y);

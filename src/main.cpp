@@ -186,7 +186,7 @@ void vertexWire() {
      * Cache will hold z-Component of magnetic field at each location on screen
      * Will only be recomputed each time a new vertex is added
      */
-    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1);
+    std::vector<std::vector<double> > cache((win.getSize().x / 100) + 1);
     for(int i = 0; i < cache.size(); i++) {
         cache[i].reserve((win.getSize().y / 100) + 1);
     }
@@ -209,7 +209,7 @@ void vertexWire() {
 int main() {
     sf::Text text;
     sf::Text title;
-    if (!font.loadFromFile("/mnt/c/Users/brady/OneDrive/Desktop/e&m/enm_learning_aid/Arial.ttf")){
+    if (!font.loadFromFile("./Arial.ttf")){
     return EXIT_FAILURE;
     }
 
