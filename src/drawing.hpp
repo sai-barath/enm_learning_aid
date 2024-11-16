@@ -194,7 +194,7 @@ namespace draw {
      * @param win The window to draw on
      * @param wir The wire
      */
-    void drawBField(sf::RenderWindow& win, const longThinWire& wir,  int& mode, const float d = 32) {
+    void drawBField(sf::RenderWindow& win, const longThinWire& wir,const float d = 32) {
         double windowSlopeFactor = win.getSize().y / win.getSize().x;
         double slope = wir.direction.yComponent / wir.direction.xComponent;
         double maxX;
@@ -216,111 +216,16 @@ namespace draw {
         double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
 
         //Draws every node in the grid representing the magnetic field
-        if (mode == 1) {
-            for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280 / d))) {
-                for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720 / d))) {
-                    vectorR3 pos(i, j, 0);
-                    vectorR3 bField = wir.computeBField(pos);
-                    //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
-                    if (computeDistanceFromWire(pos,wir) > 20){
-                        draw::intoOut(win, pos, bField, wir.current);
-                    }
+        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / d)) {
+            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / d)) {
+                vectorR3 pos(i, j, 0);
+                vectorR3 bField = wir.computeBField(pos);
+                //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
+                if (computeDistanceFromWire(pos,wir) > 20){
+                    draw::intoOut(win, pos, bField, wir.current);
                 }
             }
-        } else {
-            // sets each pixel to a color based on the magnitude and direction (blue = into the screen, red = out of the screen)
-            std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
-            int pixel_index = 0;
-            for (int i = 0; i < win.getSize().y; i++){
-                for (int j = 0; j < win.getSize().x; j++){
-                    pixel_index = (i * win.getSize().x  + j) * 4;
-                    vectorR3 pos(j, win.getSize().y - i, 0);
-                    vectorR3 bField = wir.computeBField(pos);
-                    if (bField.zComponent < 0){
-                        double bMagnitude = bField.magnitude() * 1e9;
-                        if (bMagnitude > 255) bMagnitude = 255;
-                        pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude);
-                        std::cout << "Inserting " << bMagnitude << std::endl;
-                        pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
-                        pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
-                        pixels[pixel_index + 3] = 255;
-                    } else {
-                        double bMagnitude = bField.magnitude() * 1e9;
-                        if (bMagnitude > 255) bMagnitude = 255;
-                        pixels[pixel_index] = static_cast<sf::Uint8>(255);
-                        std::cout << "Inserting " << bMagnitude << std::endl;
-                        pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
-                        pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
-                        pixels[pixel_index + 3] = 255;
-                    }
-                }
-            }
-            sf::Texture heatTextureB;
-            heatTextureB.create(win.getSize().x, win.getSize().y);
-            heatTextureB.update(pixels.data());
-            sf::RectangleShape fullScreenRect(sf::Vector2f(win.getSize().x, win.getSize().y));
-            fullScreenRect.setFillColor(sf::Color::White);
-            fullScreenRect.setTexture(&heatTextureB);
-            win.clear(sf::Color::White);
-            win.draw(fullScreenRect);
-
-            // draw the legend for blue = into and red = out of, bottom right part of the window
-
-            // outline box for the legend
-            sf::RectangleShape legendOutline(sf::Vector2f(50, 50));
-            legendOutline.setOrigin(50, 50);
-            legendOutline.setFillColor(sf::Color::White);
-            legendOutline.setOutlineThickness(1.75);
-            legendOutline.setOutlineColor(sf::Color::Black);
-            legendOutline.setPosition(sf::Vector2f(win.getSize().x - 25, win.getSize().y - 25));
-            win.draw(legendOutline);
-
-            // blue box for into the screen
-            sf::RectangleShape blueLegendBox(sf::Vector2f(15, 15));
-            blueLegendBox.setFillColor(sf::Color::Blue);
-            blueLegendBox.setPosition(win.getSize().x - 70, win.getSize().y - 68);
-            win.draw(blueLegendBox);
-
-            // into next to blue
-            sf::CircleShape intoOutline;
-            intoOutline.setPosition(win.getSize().x - 45, win.getSize().y - 68);
-            intoOutline.setFillColor(sf::Color::White);
-            intoOutline.setOutlineThickness(2);
-            intoOutline.setRadius(7.5);
-            intoOutline.setOutlineColor(sf::Color::Black);
-            sf::Vertex line1[] = {
-                sf::Vertex(sf::Vector2f(win.getSize().x - 30, win.getSize().y - 60.5), sf::Color::Black),
-                sf::Vertex(sf::Vector2f(win.getSize().x - 45, win.getSize().y - 60.5), sf::Color::Black)
-            };
-            sf::Vertex line2[] = {
-                sf::Vertex(sf::Vector2f(win.getSize().x - 37.5, win.getSize().y - 68), sf::Color::Black),
-                sf::Vertex(sf::Vector2f(win.getSize().x - 37.5, win.getSize().y - 53), sf::Color::Black)
-            };
-            win.draw(intoOutline);
-            win.draw(line1, 10, sf::Lines);
-            win.draw(line2, 10, sf::Lines);
-
-            // red box for out of screen
-            sf::RectangleShape redLegendBox(sf::Vector2f(15, 15));
-            redLegendBox.setFillColor(sf::Color::Red);
-            redLegendBox.setPosition(win.getSize().x - 70, win.getSize().y - 48);
-            win.draw(redLegendBox);
-
-            //out of next to red
-            sf::CircleShape outofOutline;
-            outofOutline.setPosition(win.getSize().x - 45, win.getSize().y - 48);
-            outofOutline.setFillColor(sf::Color::White);
-            outofOutline.setOutlineThickness(2);
-            outofOutline.setRadius(7.5);
-            outofOutline.setOutlineColor(sf::Color::Black);
-            win.draw(outofOutline);
-            
-            sf::CircleShape dot(3);
-            dot.setOrigin(3, 3);
-            dot.setPosition(win.getSize().x - 37.5, win.getSize().y - 40.5);
-            dot.setFillColor(sf::Color::Black);
-            win.draw(dot);
-        }
+        } 
         sf::RectangleShape thickLine;
         float length = sqrt(maxX*maxX + (maxY-win.getSize().y) * (maxY-win.getSize().y));
         thickLine.setOrigin(0, 5 / 2.0f);
@@ -349,12 +254,7 @@ namespace draw {
                 newTriangleOrigin.y += trianglePoint.y;
             }
             triangle.setOrigin(newTriangleOrigin.x / 3, newTriangleOrigin.y / 3);
-            if (mode == 1){
-                triangle.setFillColor(sf::Color::Red);
-            }
-            else{
-                triangle.setFillColor(sf::Color::Green);
-            }
+            triangle.setFillColor(sf::Color::Red);
             triangle.rotate(angle + 90);
             triangle.setPosition(xPos, win.getSize().y - (slope * xPos));
             win.draw(triangle);
@@ -363,47 +263,27 @@ namespace draw {
 
     void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-            // Mouse button pressed, may need to add new vertex
-            sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
-            if(wir.vertices.empty()) { 
-                // If no vertices exist, we can add one without any other checks, no B-field recompute needed
-                std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-                wir.addVertex(position.x, win.getSize().y - position.y);
-            } else {
-                // Some vertices exist
-                vectorR3 last = wir.vertices[wir.vertices.size() - 1];
-                // Check last vertex added to avoid duplication
-                if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
-                    // If new click location is different from last
-                    std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-                    wir.addVertex(position.x, win.getSize().y - position.y);
-                    // Recalculate b field and store in cache
-                    if(wir.vertices.size() >= 3) {
-                        for(int i = 0; i <= (win.getSize().x / 100); i++) {
-                            for(int j = 0; j <= (win.getSize().y / 100); j++) {
-                                vectorR3 pos(i * 100, j * 100, 0.0);
-                                vectorR3 bField = wir.bField(pos);
-                                cache[i][j] = bField.zComponent;
-                            }
-                        }
+            sf::Vector2i position = sf::Mouse::getPosition();
+            wir.addVertex(position.x, win.getSize().y - position.y);
+            std::cout << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+            if(wir.vertices.size() >= 3) {
+                for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
+                    for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
+                        vectorR3 pos(i * 100, j * 100, 0.0);
+                        vectorR3 bField = wir.bField(pos);
+                        cache[i][j] = bField.zComponent;
+                        draw::intoOut(win, pos, bField, 1);
                     }
                 }
             }
         }
         if(wir.vertices.size() >= 3) {
-            // Draw wire and display b-field if enough vertices
-            int numVert = wir.vertices.size();
+            /*sf::Vertex wire[wir.vertices.size() + 1];
             for(int i = 0; i < wir.vertices.size(); i++) {
-                sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
-                win.draw(wirSeg, 2, sf::Lines);
+                wire[i] = sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black);
             }
-            for(int i = 0; i <= (win.getSize().x / 100); i++) {
-                for(int j = 0; j <= (win.getSize().y / 100); j++) {
-                    vectorR3 bField(0, 0, cache[i][j]);
-                    vectorR3 pos(i * 100, j * 100, 0.0);
-                    draw::intoOut(win, pos, bField);
-                }
-            }
+            wire[wir.vertices.size()] = wire[0];
+            win.draw(wire, wir.vertices.size() + 1, sf::Lines);*/
         }
     }
     /**
@@ -414,8 +294,39 @@ namespace draw {
      * @param vect actual vector
      */
     void drawCircularDisk(sf::RenderWindow& win, std::vector<disk>& disks) {
-        for(int i = 0; i < disks.size(); i++) {
+        int numc = disks.size();
+        for(int i = 0; i < numc; i++) {
             sf::CircleShape charge(disks[i].rad);
+            charge.setOrigin(disks[i].rad, disks[i].rad);
+            charge.setPosition(disks[i].center.xComponent, win.getSize().y - disks[i].center.yComponent);
+            if(disks[i].chargeDensity <= 0.0) {
+                charge.setFillColor(sf::Color::Blue); 
+                win.draw(charge);
+            } else {
+                charge.setFillColor(sf::Color::Red);
+                win.draw(charge);
+            }
+        }
+        int numx = (win.getSize().x / 100) + 1;
+        int numy = (win.getSize().y / 100) + 1;
+        for(int i = 0; i < numx; i++) {
+            for(int j = 0; j < numy; j++) {
+                bool shouldCompute = true;
+                vectorR3 pos(i * 100, j * 100, 0);
+                for(int k = 0; k < numc; k++) {
+                    vectorR3 dist = pos - disks[k].center;
+                    if(dist.magSquared() <= disks[k].rad * disks[k].rad) {
+                        shouldCompute = false;
+                    }
+                }
+                if(shouldCompute) {
+                    vectorR3 efieldatpos = disks[0].efield(pos);
+                    for(int k = 1; k < numc; k++) {
+                        efieldatpos += disks[k].efield(pos);
+                    }
+                    draw::drawVector(win, pos, efieldatpos);
+                } 
+            }
         }
     }
 };

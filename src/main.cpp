@@ -4,7 +4,9 @@
 #include "vectorR3.hpp"
 #include "drawing.hpp"
 #include "pointCharge.hpp"
+#include "vertexWire.hpp"
 #include "bField.hpp"
+#include "disk.hpp"
 #include <vector>
 
 
@@ -71,7 +73,7 @@ void vertexWire() {
      * Cache will hold z-Component of magnetic field at each location on screen
      * Will only be recomputed each time a new vertex is added
      */
-    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1, std::vector<double>((win.getSize().y / 100) + 1));
+    std::vector<std::vector<double> > cache((win.getSize().x / 100) + 1, std::vector<double>((win.getSize().y / 100) + 1));
     wireOfVertices wir(curr);
     while (win.isOpen()) {
         win.clear(sf::Color::White);
@@ -86,8 +88,35 @@ void vertexWire() {
     }
 }
 
+void disks() {
+    std::cout << "Enter num disks (must be > 0)" << std::endl;
+    int numc = -1;
+    while(numc <= 0) {
+        std::cin >> numc;
+    }
+    std::vector<disk> charges;
+    for(int i = 0; i < numc; i++) {
+        double x = 0.0, y = 0.0, r = 0.0, d = 0.0;
+        std::cout << "Enter x y radius density (space separated) for charge #" << i + 1 << std::endl;
+        std::cin >> x >> y >> r >> d;
+        charges.push_back(disk(vectorR3(x, y, 0.0), r, d));
+    }
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
+    while (win.isOpen()) {
+        win.clear(sf::Color::White);
+        sf::Event e;
+        while (win.pollEvent(e)) {
+            if (e.type == sf::Event::Closed) {
+                win.close();
+            }
+        }
+        draw::drawCircularDisk(win, charges);
+        win.display();
+    }
+}
+
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl << "(3) Wire of vertices" << std::endl; 
+    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl << "(3) Wire of vertices" << std::endl << "(4) disks" << std::endl; 
     int choice = -1;
     std::cin >> choice;
     if(choice == 1) {
@@ -96,6 +125,8 @@ int main() {
         drawB();
     } else if(choice == 3) {
         vertexWire();
+    } else if(choice == 4) {
+        disks();
     } else {
         return 1;
     }
