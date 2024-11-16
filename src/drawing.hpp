@@ -222,7 +222,7 @@ namespace draw {
         double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
 
         //Draws every node in the grid representing the magnetic field
-        if (mode == 1){
+        if (mode == 1) {
             for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280 / d))) {
                 for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720 / d))) {
                     vectorR3 pos(i, j, 0);
@@ -233,8 +233,7 @@ namespace draw {
                     }
                 }
             }
-        }
-        else{
+        } else {
             // sets each pixel to a color based on the magnitude and direction (blue = into the screen, red = out of the screen)
             std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
             int pixel_index = 0;
@@ -251,8 +250,7 @@ namespace draw {
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
                         pixels[pixel_index + 3] = 255;
-                    }
-                    else{
+                    } else {
                         double bMagnitude = bField.magnitude() * 1e9;
                         if (bMagnitude > 255) bMagnitude = 255;
                         pixels[pixel_index] = static_cast<sf::Uint8>(255);
@@ -371,27 +369,47 @@ namespace draw {
 
     void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-            sf::Vector2i position = sf::Mouse::getPosition();
-            wir.addVertex(position.x, win.getSize().y - position.y);
-            std::cout << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-            if(wir.vertices.size() >= 3) {
-                for(int i = 0; i <= win.getSize().x; i += win.getSize().x / 100) {
-                    for(int j = 0; j <= win.getSize().y; j += win.getSize().y / 100) {
-                        vectorR3 pos(i * 100, j * 100, 0.0);
-                        vectorR3 bField = wir.bField(pos);
-                        cache[i][j] = bField.zComponent;
-                        draw::intoOut(win, pos, bField, 1);
+            // Mouse button pressed, may need to add new vertex
+            sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
+            if(wir.vertices.empty()) { 
+                // If no vertices exist, we can add one without any other checks, no B-field recompute needed
+                std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+                wir.addVertex(position.x, win.getSize().y - position.y);
+            } else {
+                // Some vertices exist
+                vectorR3 last = wir.vertices[wir.vertices.size() - 1];
+                // Check last vertex added to avoid duplication
+                if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
+                    // If new click location is different from last
+                    std::cout << "inserting" << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+                    wir.addVertex(position.x, win.getSize().y - position.y);
+                    // Recalculate b field and store in cache
+                    if(wir.vertices.size() >= 3) {
+                        for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                            for(int j = 0; j <= (win.getSize().y / 100); j++) {
+                                vectorR3 pos(i * 100, j * 100, 0.0);
+                                vectorR3 bField = wir.bField(pos);
+                                cache[i][j] = bField.zComponent;
+                            }
+                        }
                     }
                 }
             }
         }
         if(wir.vertices.size() >= 3) {
-            /*sf::Vertex wire[wir.vertices.size() + 1];
+            // Draw wire and display b-field if enough vertices
+            int numVert = wir.vertices.size();
             for(int i = 0; i < wir.vertices.size(); i++) {
-                wire[i] = sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black);
+                sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
+                win.draw(wirSeg, 2, sf::Lines);
             }
-            wire[wir.vertices.size()] = wire[0];
-            win.draw(wire, wir.vertices.size() + 1, sf::Lines);*/
+            for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                for(int j = 0; j <= (win.getSize().y / 100); j++) {
+                    vectorR3 bField(0, 0, cache[i][j]);
+                    vectorR3 pos(i * 100, j * 100, 0.0);
+                    draw::intoOut(win, pos, bField);
+                }
+            }
         }
     }
 };
