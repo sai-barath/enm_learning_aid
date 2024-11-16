@@ -22,7 +22,7 @@ void pointCharges() {
         charges.push_back(pointCharge(x, y, 0.0, c));
     }
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
-    int i = 0;
+    draw::drawElecField(win, charges);
     std::cout << "Units used are meters, coulombs, and newtons, chages around the order of magnitude of 10^-4 work best " << std::endl;
     while (win.isOpen()) {
         win.clear(sf::Color::White);
@@ -32,13 +32,7 @@ void pointCharges() {
                 win.close();
             }
         }
-        if(i == 0) {
-            draw::drawElecField(win, charges);
-        } else {
-            draw::drawElecField(win, charges);
-        }
         win.display();
-        i++;
     }
 }
 
@@ -46,8 +40,12 @@ void drawB() {
     double x = 1.0,  y = 1.0, curr = 0.0;
     std::cout << "Enter x-dir, y-dir, current" << std::endl;
     std::cin >> x >> y >> curr;
+    std::cout << "(1) Field vectors" << std::endl << "(2) Heat map" << std::endl;
+    int mode = 0;
+    std::cin >> mode;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
-    int i = 0;
+    longThinWire wir(x, y, curr);
+    draw::drawBField(win, wir, mode);
     clock_t startTime = clock();
     while (win.isOpen()) {
         win.clear(sf::Color::White);
@@ -57,12 +55,9 @@ void drawB() {
                 win.close();
             }
         }
-        longThinWire wir(x, y, curr);
-        draw::drawBField(win, wir);
         win.display();
         //std::cout << "Drawing frame " + std::to_string(i) << std::endl;
         //std::cout << "FPS: " + std::to_string(i / (float(clock() - startTime) / 1000000)) << std::endl;
-        i++;
         //y = std::fmod(1.0001 * y + 0.00001, 3);
     }
 }
