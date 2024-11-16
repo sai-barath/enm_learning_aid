@@ -12,10 +12,10 @@ jobs:
               run: cmake -B build
             - name: Finish Build
               run: cmake --build build
-            - uses: actions/upload-artifact@v4
-              with:
-                name: ubuntu_executable
-                path: build/enm_learning_aid
+            #- uses: actions/upload-artifact@v4
+             # with:
+               # name: ubuntu_executable
+               # path: build/enm_learning_aid
     buildWin:
       runs-on: windows-latest
       steps:

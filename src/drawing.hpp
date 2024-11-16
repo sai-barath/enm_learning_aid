@@ -22,11 +22,13 @@ namespace draw {
         int triangleSize = 10;
         vectorR3 start(begin.xComponent, win.getSize().y - begin.yComponent, 0);
         vectorR3 vec(vect.xComponent, -vect.yComponent, 0);
+
         if(vec.magSquared() > 6400) {
             vec *= (80 / vec.magnitude());
         } else if(vec.magSquared() < 100) {
             vec *= (10 / vec.magnitude());
         }
+        triangleSize = vec.magnitude()/5;
         sf::Vertex line[] =
         {
             sf::Vertex(sf::Vector2f(start.xComponent, start.yComponent), sf::Color::Black),
@@ -75,6 +77,7 @@ namespace draw {
     
     }
 
+
     /**
      * Draw a vector with only a z-component
      *
@@ -82,22 +85,34 @@ namespace draw {
      * @param where start point
      * @param vec actual vector
      */
-    void intoOut(sf::RenderWindow& win, const vectorR3& where, const vectorR3& vec) {
-        double zComp = std::abs(vec.zComponent);
-        if(zComp > 48.0) {
-            zComp = 48.0;
-        } else if(zComp < 5.0 && zComp != 0) {
-            zComp = 5.0;
+    void intoOut(sf::RenderWindow& win, const vectorR3& where, const vectorR3& vec, double current) {
+        double zComp = std::abs(vec.zComponent * 1e9 / current);
+        int scalingFactor;
+        sf::Color color;
+
+        if (zComp <= 1) {
+            color = sf::Color::Blue;
+            scalingFactor = 2;
+        } else if (zComp <= 2) {
+            color = sf::Color::Green;
+            scalingFactor = 2 + (zComp - 1) * 3;
+        } else if (zComp <= 4) {
+            color = sf::Color::Yellow;
+            scalingFactor = 5 + (zComp - 2) * (11 / 2);
+        } else {
+            color = sf::Color::Red;
+            scalingFactor = 16;
         }
         sf::CircleShape sym(zComp);
-        sym.setOrigin(zComp, zComp);
+        sym.setRadius(scalingFactor);
+        sym.setOutlineColor(color);
+        sym.setOrigin(sym.getRadius(), sym.getRadius());
         sym.setFillColor(sf::Color::White);
         sym.setPosition(where.xComponent, win.getSize().y - where.yComponent);
         sym.setOutlineThickness(2);
-        sym.setOutlineColor(sf::Color::Black);
         win.draw(sym);
         if(vec.zComponent < 0.0) {
-            double lineLen = zComp / SQRT2;
+            double lineLen = scalingFactor / SQRT2;
             sf::Vertex line1[] = {
                 sf::Vertex(sf::Vector2f(where.xComponent - lineLen, win.getSize().y - where.yComponent + lineLen), sf::Color::Black),
                 sf::Vertex(sf::Vector2f(where.xComponent + lineLen, win.getSize().y - where.yComponent - lineLen), sf::Color::Black)
@@ -109,8 +124,9 @@ namespace draw {
             win.draw(line1, 2, sf::Lines);
             win.draw(line2, 2, sf::Lines);
         } else {
-            sf::CircleShape dot(zComp / 4.0);
-            dot.setOrigin(zComp / 4.0, zComp / 4.0);
+            double dotRadius = 1 + scalingFactor / 4;
+            sf::CircleShape dot(dotRadius);
+            dot.setOrigin(dotRadius, dotRadius);
             dot.setPosition(where.xComponent, win.getSize().y - where.yComponent);
             dot.setFillColor(sf::Color::Black);
             win.draw(dot);
@@ -156,17 +172,39 @@ namespace draw {
         }
     }
 
+    double computeDistanceFromWire(const vectorR3& pos, const longThinWire& wir) {
+    // p1: A point on the wire (you can use the wire's starting point)
+    vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+
+    // p2: The position of the vector (pos in this case)
+    vectorR3 p2 = pos;
+
+    // d: The direction vector of the wire
+    vectorR3 d = wir.direction;
+
+    // Compute the vector from p1 to p2
+    vectorR3 p1_to_p2 = p2 - p1;
+
+    // Compute the cross product of d and (p2 - p1)
+    vectorR3 crossProduct = d.cross(p1_to_p2);
+
+    // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
+    double distance = crossProduct.magnitude() / d.magnitude();
+
+    return distance;
+}
+
     /**
      * Draw an arbitrarily long wire and its magnetic field
      *
      * @param win The window to draw on
      * @param wir The wire
      */
-    void drawBField(sf::RenderWindow& win, const longThinWire& wir) {
+    void drawBField(sf::RenderWindow& win, const longThinWire& wir,const float d = 32) {
         double windowSlopeFactor = win.getSize().y / win.getSize().x;
         double slope = wir.direction.yComponent / wir.direction.xComponent;
-        double maxX = -1.0;
-        double maxY = -1.0;
+        double maxX;
+        double maxY;
         //If our wire is steeper than the window, we have to truncate it to avoid drawing out of bounds
         if (slope > windowSlopeFactor) {
             maxX = win.getSize().y / slope;
@@ -183,13 +221,37 @@ namespace draw {
         //Calculate angle *after* we know the final wire vector
         double angle = atan2(wire[1].position.y - wire[0].position.y, wire[1].position.x - wire[0].position.x) * (180 / PI);
 
+        //Draws every node in the grid representing the magnetic field
+        for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / d)) {
+            for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / d)) {
+                vectorR3 pos(i, j, 0);
+                vectorR3 bField = wir.computeBField(pos);
+                //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
+                if (computeDistanceFromWire(pos,wir) > 20){
+                    draw::intoOut(win, pos, bField, wir.current);
+                }
+            }
+        } 
+        sf::RectangleShape thickLine;
+        float length = sqrt(maxX*maxX + (maxY-win.getSize().y) * (maxY-win.getSize().y));
+        thickLine.setOrigin(0, 5 / 2.0f);
+        thickLine.setSize(sf::Vector2f(length, 5));
+        thickLine.setRotation(angle);
+        thickLine.setPosition(0, win.getSize().y);
+        thickLine.setFillColor(sf::Color::Black);
+        win.draw(thickLine);
+        //win.draw(wire , 2, sf::Lines);
+
+        if (wir.current < 0) {
+            angle = std::fmod(angle + 180, 360);
+        }
+
         double triangleSize = 10.0;
-        for(double xPos = 0.0; xPos < maxX; xPos += (maxX / 5)) {
+        for (double xPos = 0.0; xPos < maxX; xPos += (maxX / 5)) {
 
             //Temporary fix for #33; calculate "center of mass" or average position, then rotate
             //Let's move this into a helper/utility class later.
             //We also aren't drawing enough triangles when slope < 1, is this intended?
-            //---
             sf::CircleShape triangle(triangleSize, 3);
             sf::Vector2f newTriangleOrigin;
             for (int i = 0; i < 3; i++) {
@@ -198,26 +260,14 @@ namespace draw {
                 newTriangleOrigin.y += trianglePoint.y;
             }
             triangle.setOrigin(newTriangleOrigin.x / 3, newTriangleOrigin.y / 3);
-            //---
-            
             triangle.setFillColor(sf::Color::Red);
             triangle.rotate(angle + 90);
             triangle.setPosition(xPos, win.getSize().y - (slope * xPos));
             win.draw(triangle);
         }
-        // Don't need to use SFML's coord system here
-        for(double i = 0.0; i < win.getSize().x; i += (win.getSize().x / 10.0)) {
-            for(double j = 0.0; j < win.getSize().y; j += (win.getSize().y / 10.0)) {
-                vectorR3 pos(i, j, 0);
-                vectorR3 bField = wir.computeBField(pos);
-                //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;   
-                draw::intoOut(win, pos, bField);
-            }
-        } 
-        win.draw(wire, 2, sf::Lines);
     }
 
-    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double>>& cache) {
+    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             // Mouse button pressed, may need to add new vertex
             sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));

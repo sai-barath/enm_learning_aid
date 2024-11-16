@@ -47,6 +47,8 @@ void drawB() {
     std::cout << "Enter x-dir, y-dir, current" << std::endl;
     std::cin >> x >> y >> curr;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
+    int i = 0;
+    clock_t startTime = clock();
     while (win.isOpen()) {
         win.clear(sf::Color::White);
         sf::Event e;
@@ -58,6 +60,10 @@ void drawB() {
         longThinWire wir(x, y, curr);
         draw::drawBField(win, wir);
         win.display();
+        //std::cout << "Drawing frame " + std::to_string(i) << std::endl;
+        //std::cout << "FPS: " + std::to_string(i / (float(clock() - startTime) / 1000000)) << std::endl;
+        i++;
+        //y = std::fmod(1.0001 * y + 0.00001, 3);
     }
 }
 
