@@ -268,6 +268,10 @@ namespace draw {
     }
 
     void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache, int mode) {
+        int multiplier = 100;
+        if (mode == 2){
+            multiplier = 1;
+        }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             // Mouse button pressed, may need to add new vertex
             sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
@@ -285,9 +289,9 @@ namespace draw {
                     wir.addVertex(position.x, win.getSize().y - position.y);
                     // Recalculate b field and store in cache
                     if(wir.vertices.size() >= 3) {
-                        for(int i = 0; i <= (win.getSize().x / 100); i++) {
-                            for(int j = 0; j <= (win.getSize().y / 100); j++) {
-                                vectorR3 pos(i * 100, j * 100, 0.0);
+                        for(int i = 0; i <= (win.getSize().x / multiplier); i++) {
+                            for(int j = 0; j <= (win.getSize().y / multiplier); j++) {
+                                vectorR3 pos(i * multiplier, j * multiplier, 0.0);
                                 vectorR3 bField = wir.bField(pos);
                                 cache[i][j] = bField.zComponent;
                             }
@@ -303,13 +307,21 @@ namespace draw {
                 sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
                 win.draw(wirSeg, 2, sf::Lines);
             }
-            for(int i = 0; i <= (win.getSize().x / 100); i++) {
-                for(int j = 0; j <= (win.getSize().y / 100); j++) {
-                    vectorR3 bField(0, 0, cache[i][j]);
-                    vectorR3 pos(i * 100, j * 100, 0.0);
-                    draw::intoOut(win, pos, bField);
+            if (multiplier == 100){
+                for(int i = 0; i <= (win.getSize().x / 100); i++) {
+                    for(int j = 0; j <= (win.getSize().y / 100); j++) {
+                        vectorR3 bField(0, 0, cache[i][j]);
+                        vectorR3 pos(i * 100, j * 100, 0.0);
+                        draw::intoOut(win, pos, bField, 1); // added 1 here for placeholder but have to discuss with sai
+                    }
                 }
             }
+            else{
+
+            }
+            
+
+            
         }
     }
 };
