@@ -71,12 +71,25 @@ void vertexWire() {
     double curr = 0.0;
     std::cout << "Enter current" << std::endl;
     std::cin >> curr;
+    std::cout << "Pick one:\n(1) Field Vector\n(2) Heat Map" << std::endl;
+    int mode = 0;
+    std::cin >> mode;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
     /**
      * Cache will hold z-Component of magnetic field at each location on screen
      * Will only be recomputed each time a new vertex is added
      */
-    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1, std::vector<double>((win.getSize().y / 100) + 1));
+    int x_size = 0;
+    int y_size = 0;
+    if (mode == 2){
+        x_size = win.getSize().x;
+        y_size = win.getSize().y;
+    }
+    else{
+        x_size = (win.getSize().x / 100) + 1;
+        y_size = (win.getSize().y / 100) + 1;
+    }
+    std::vector<std::vector<double>> cache(x_size, std::vector<double>(y_size));
     wireOfVertices wir(curr);
     while (win.isOpen()) {
         win.clear(sf::Color::White);

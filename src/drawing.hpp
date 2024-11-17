@@ -267,7 +267,7 @@ namespace draw {
         }
     }
 
-    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache) {
+    void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache, int mode) {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
             // Mouse button pressed, may need to add new vertex
             sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
