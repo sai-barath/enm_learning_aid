@@ -99,7 +99,7 @@ void vertexWire() {
                 win.close();
             }
         }
-        draw::drawVertexWire(win, wir, cache);
+        draw::drawVertexWire(win, wir, cache, mode);
         win.display();
     }
 }
