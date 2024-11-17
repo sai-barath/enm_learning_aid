@@ -277,7 +277,7 @@ namespace draw {
             sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
             if(wir.vertices.empty()) { 
                 // If no vertices exist, we can add one without any other checks, no B-field recompute needed
-                std::cout << "inserting 1 " << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+                std::cout << "inserting " << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
                 wir.addVertex(position.x, win.getSize().y - position.y);
             } else {
                 // Some vertices exist
@@ -285,16 +285,15 @@ namespace draw {
                 // Check last vertex added to avoid duplication
                 if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
                     // If new click location is different from last
-                    std::cout << "inserting 2 " << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
+                    std::cout << "inserting " << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
                     wir.addVertex(position.x, win.getSize().y - position.y);
                     // Recalculate b field and store in cache
                     if(wir.vertices.size() >= 3) {
-                        for(int i = 0; i <= (win.getSize().x / multiplier); i++) {
-                            for(int j = 0; j <= (win.getSize().y / multiplier); j++) {
+                        for(int i = 0; i < (win.getSize().x / multiplier); i++) {
+                            for(int j = 0; j < (win.getSize().y / multiplier); j++) {
                                 vectorR3 pos(i * multiplier, j * multiplier, 0.0);
                                 vectorR3 bField = wir.bField(pos);
                                 cache[i][j] = bField.zComponent;
-                                std::cout << "success " << i << " " << j << std::endl;
                             }
                         }
                     }
@@ -303,7 +302,6 @@ namespace draw {
         }
         if(wir.vertices.size() >= 3) {
             // Draw wire and display b-field if enough vertices
-            std::cout << "here 1" << std::endl;
             int numVert = wir.vertices.size();
             for(int i = 0; i < wir.vertices.size(); i++) {
                 sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
@@ -319,7 +317,6 @@ namespace draw {
                 }
             }
             else{
-                std::cout << "here" << std::endl;
                 std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
                 int pixel_index = 0;
                 for (int i = 0; i < win.getSize().y; i++){
@@ -328,7 +325,7 @@ namespace draw {
                         vectorR3 pos(j, win.getSize().y - i, 0);
                         double bField = cache[j][i];
                         if (bField < 0){
-                            double bMagnitude = bField;
+                            double bMagnitude = bField * 1e9;
                             if (bMagnitude > 255) bMagnitude = 255;
                             pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude);
                             std::cout << "Inserting " << bMagnitude << std::endl;
@@ -336,7 +333,7 @@ namespace draw {
                             pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
                             pixels[pixel_index + 3] = 255;
                         } else {
-                            double bMagnitude = bField;
+                            double bMagnitude = bField * 1e9;
                             if (bMagnitude > 255) bMagnitude = 255;
                             pixels[pixel_index] = static_cast<sf::Uint8>(255);
                             std::cout << "Inserting " << bMagnitude << std::endl;
@@ -346,7 +343,6 @@ namespace draw {
                         }
                     }
                 }
-                std::cout << "here 2" << std::endl;
                 sf::Texture heatTextureB;
                 heatTextureB.create(win.getSize().x, win.getSize().y);
                 heatTextureB.update(pixels.data());
