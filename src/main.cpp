@@ -91,15 +91,17 @@ void vertexWire() {
     }
     std::vector<std::vector<double>> cache(x_size, std::vector<double>(y_size));
     wireOfVertices wir(curr);
+    win.clear(sf::Color::White);
     while (win.isOpen()) {
-        win.clear(sf::Color::White);
         sf::Event e;
         while (win.pollEvent(e)) {
             if (e.type == sf::Event::Closed) {
                 win.close();
             }
+            if (e.mouseButton.button == sf::Mouse::Right){
+                draw::drawVertexWire(win, wir, cache, mode);
+            }
         }
-        draw::drawVertexWire(win, wir, cache, mode);
         win.display();
     }
 }

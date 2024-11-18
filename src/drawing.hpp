@@ -268,33 +268,32 @@ namespace draw {
     }
 
     void drawVertexWire(sf::RenderWindow& win, wireOfVertices& wir, std::vector<std::vector<double> >& cache, int mode) {
+        win.clear(sf::Color::White);
         int multiplier = 100;
         if (mode == 2){
             multiplier = 1;
         }
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-            // Mouse button pressed, may need to add new vertex
-            sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
-            if(wir.vertices.empty()) { 
-                // If no vertices exist, we can add one without any other checks, no B-field recompute needed
-                std::cout << "inserting " << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-                wir.addVertex(position.x, win.getSize().y - position.y);
-            } else {
-                // Some vertices exist
-                vectorR3 last = wir.vertices[wir.vertices.size() - 1];
-                // Check last vertex added to avoid duplication
-                if(last.xComponent != position.x || last.yComponent != win.getSize().y - position.y) {
-                    // If new click location is different from last
-                    std::cout << "inserting " << vectorR3(position.x, win.getSize().y - position.y, 0.0) << std::endl;
-                    wir.addVertex(position.x, win.getSize().y - position.y);
-                    // Recalculate b field and store in cache
-                    if(wir.vertices.size() >= 3) {
-                        for(int i = 0; i < (win.getSize().x / multiplier); i++) {
-                            for(int j = 0; j < (win.getSize().y / multiplier); j++) {
-                                vectorR3 pos(i * multiplier, j * multiplier, 0.0);
-                                vectorR3 bField = wir.bField(pos);
-                                cache[i][j] = bField.zComponent;
-                            }
+        // Mouse button pressed, may need to add new vertex
+        sf::Vector2f position = win.mapPixelToCoords(sf::Mouse::getPosition(win));
+        if(wir.vertices.empty()) { 
+            // If no vertices exist, we can add one without any other checks, no B-field recompute needed
+            std::cout << "inserting " << vectorR3(position.x, position.y, 0.0) << std::endl;
+            wir.addVertex(position.x, position.y);
+        } else {
+            // Some vertices exist
+            vectorR3 last = wir.vertices[wir.vertices.size() - 1];
+            // Check last vertex added to avoid duplication
+            if(last.xComponent != position.x || last.yComponent != position.y) {
+                // If new click location is different from last
+                std::cout << "inserting " << vectorR3(position.x, position.y, 0.0) << std::endl;
+                wir.addVertex(position.x, position.y);
+                // Recalculate b field and store in cache
+                if(wir.vertices.size() >= 3) {
+                    for(int i = 0; i < (win.getSize().x / multiplier); i++) {
+                        for(int j = 0; j < (win.getSize().y / multiplier); j++) {
+                            vectorR3 pos(i * multiplier, j * multiplier, 0.0);
+                            vectorR3 bField = wir.bField(pos);
+                            cache[i][j] = bField.zComponent;
                         }
                     }
                 }
