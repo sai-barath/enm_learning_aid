@@ -4,11 +4,10 @@
 /**
  * A wire with various vertices and straight-line segments in between
  */
-class wireOfVertices {
-	private:
-		double current;
+class wireOfVertices {		
 	public:
 		std::vector<vectorR3> vertices;
+		double current;
 		/**
 		 * Create a wire of vertices
 		 * @param curr: The (equal) current in each segment of wire

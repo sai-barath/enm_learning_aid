@@ -306,16 +306,15 @@ namespace draw {
                 sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
                 win.draw(wirSeg, 2, sf::Lines);
             }
-            if (multiplier == 100){
+            if (mode == 1) {
                 for(int i = 0; i <= (win.getSize().x / 100); i++) {
                     for(int j = 0; j <= (win.getSize().y / 100); j++) {
                         vectorR3 bField(0, 0, cache[i][j]);
                         vectorR3 pos(i * 100, j * 100, 0.0);
-                        draw::intoOut(win, pos, bField, 1); // added 1 here for placeholder but have to discuss with sai
+                        draw::intoOut(win, pos, bField, wir.current); // added 1 here for placeholder but have to discuss with sai
                     }
                 }
-            }
-            else{
+            } else {
                 std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
                 int pixel_index = 0;
                 for (int i = 0; i < win.getSize().y; i++){
@@ -324,31 +323,31 @@ namespace draw {
                         vectorR3 pos(j, win.getSize().y - i, 0);
                         double bField = cache[j][i];
                         if (bField < 0){
-                            double bMagnitude = bField * 1e9;
+                            double bMagnitude = -bField * 1e9;
                             if (bMagnitude > 255) bMagnitude = 255;
-                            pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude);
-                            std::cout << "Inserting " << bMagnitude << std::endl;
-                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
-                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
-                            pixels[pixel_index + 3] = 255;
+                            pixels[pixel_index] = static_cast<sf::Uint8>(0);
+                            //std::cout << "Inserting " << bMagnitude << std::endl;
+                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(0);
+                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(bMagnitude);
+                            pixels[pixel_index + 3] = static_cast<sf::Uint8>(255);
                         } else {
                             double bMagnitude = bField * 1e9;
                             if (bMagnitude > 255) bMagnitude = 255;
-                            pixels[pixel_index] = static_cast<sf::Uint8>(255);
-                            std::cout << "Inserting " << bMagnitude << std::endl;
-                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
-                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
-                            pixels[pixel_index + 3] = 255;
+                            pixels[pixel_index] = static_cast<sf::Uint8>(bMagnitude);
+                            //std::cout << "Inserting " << bMagnitude << std::endl;
+                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(0);
+                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(0);
+                            pixels[pixel_index + 3] = static_cast<sf::Uint8>(255);
                         }
                     }
                 }
+                win.clear(sf::Color::White);
                 sf::Texture heatTextureB;
                 heatTextureB.create(win.getSize().x, win.getSize().y);
                 heatTextureB.update(pixels.data());
                 sf::RectangleShape fullScreenRect(sf::Vector2f(win.getSize().x, win.getSize().y));
-                fullScreenRect.setFillColor(sf::Color::White);
+                //fullScreenRect.setFillColor(sf::Color::White);
                 fullScreenRect.setTexture(&heatTextureB);
-                win.clear(sf::Color::White);
                 win.draw(fullScreenRect);
 
                 // draw the legend for blue = into and red = out of, bottom right part of the window
