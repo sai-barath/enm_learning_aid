@@ -48,14 +48,21 @@ void pointCharges() {
         }
     } else {
         draw::eFieldHeatMap(charges);
-    }  
+        win.display();
+    }
 }
 
 void drawB() {
     double x = 1.0,  y = 1.0, curr = 0.0;
     std::cout << "Enter x-dir, y-dir, current" << std::endl;
     std::cin >> x >> y >> curr;
+    std::cout << "(1) Field vectors" << std::endl << "(2) Heat map" << std::endl;
+    int mode = 0;
+    std::cin >> mode;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
+    longThinWire wir(x, y, curr);
+    draw::drawBField(win, wir, mode);
+    clock_t startTime = clock();
     while (win.isOpen()) {
         win.clear(sf::Color::White);
         sf::Event e;
@@ -64,9 +71,10 @@ void drawB() {
                 win.close();
             }
         }
-        longThinWire wir(x, y, curr);
-        draw::drawBField(win, wir);
         win.display();
+        //std::cout << "Drawing frame " + std::to_string(i) << std::endl;
+        //std::cout << "FPS: " + std::to_string(i / (float(clock() - startTime) / 1000000)) << std::endl;
+        //y = std::fmod(1.0001 * y + 0.00001, 3);
     }
 }
 
@@ -74,25 +82,37 @@ void vertexWire() {
     double curr = 0.0;
     std::cout << "Enter current" << std::endl;
     std::cin >> curr;
+    std::cout << "Pick one:\n(1) Field Vector\n(2) Heat Map" << std::endl;
+    int mode = 0;
+    std::cin >> mode;
     sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid");
     /**
      * Cache will hold z-Component of magnetic field at each location on screen
      * Will only be recomputed each time a new vertex is added
      */
-    std::vector<std::vector<double>> cache((win.getSize().x / 100) + 1);
-    for(int i = 0; i < cache.size(); i++) {
-        cache[i].reserve((win.getSize().y / 100) + 1);
+    int x_size = 0;
+    int y_size = 0;
+    if (mode == 2){
+        x_size = win.getSize().x;
+        y_size = win.getSize().y;
     }
+    else{
+        x_size = (win.getSize().x / 100) + 1;
+        y_size = (win.getSize().y / 100) + 1;
+    }
+    std::vector<std::vector<double>> cache(x_size, std::vector<double>(y_size));
     wireOfVertices wir(curr);
+    win.clear(sf::Color::White);
     while (win.isOpen()) {
-        win.clear(sf::Color::White);
         sf::Event e;
         while (win.pollEvent(e)) {
             if (e.type == sf::Event::Closed) {
                 win.close();
             }
+            if (e.mouseButton.button == sf::Mouse::Right){
+                draw::drawVertexWire(win, wir, cache, mode);
+            }
         }
-        draw::drawVertexWire(win, wir, cache);
         win.display();
     }
 }
