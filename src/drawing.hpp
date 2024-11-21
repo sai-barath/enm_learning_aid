@@ -316,27 +316,27 @@ namespace draw {
                 }
             } else {
                 std::vector<sf::Uint8> pixels(win.getSize().x * win.getSize().y * 4);
-                int pixel_index = 0;
-                for (int i = 0; i < win.getSize().y; i++){
-                    for (int j = 0; j < win.getSize().x; j++){
-                        pixel_index = (i * win.getSize().x  + j) * 4;
-                        vectorR3 pos(j, win.getSize().y - i, 0);
-                        double bField = cache[j][i];
+                
+                for (int i = 0; i < win.getSize().x; i++){
+                    for (int j = 0; j < win.getSize().y; j++){
+                        int pixel_index = (j * win.getSize().x  + i) * 4;
+                        vectorR3 pos(i, win.getSize().y - j, 0);
+                        double bField = cache[i][j];
                         if (bField < 0){
                             double bMagnitude = -bField * 1e9;
                             if (bMagnitude > 255) bMagnitude = 255;
-                            pixels[pixel_index] = static_cast<sf::Uint8>(0);
+                            pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude);
                             //std::cout << "Inserting " << bMagnitude << std::endl;
-                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(0);
-                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(bMagnitude);
+                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
+                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
                             pixels[pixel_index + 3] = static_cast<sf::Uint8>(255);
                         } else {
                             double bMagnitude = bField * 1e9;
                             if (bMagnitude > 255) bMagnitude = 255;
-                            pixels[pixel_index] = static_cast<sf::Uint8>(bMagnitude);
+                            pixels[pixel_index] = static_cast<sf::Uint8>(255);
                             //std::cout << "Inserting " << bMagnitude << std::endl;
-                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(0);
-                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(0);
+                            pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
+                            pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
                             pixels[pixel_index + 3] = static_cast<sf::Uint8>(255);
                         }
                     }
@@ -346,7 +346,7 @@ namespace draw {
                 heatTextureB.create(win.getSize().x, win.getSize().y);
                 heatTextureB.update(pixels.data());
                 sf::RectangleShape fullScreenRect(sf::Vector2f(win.getSize().x, win.getSize().y));
-                //fullScreenRect.setFillColor(sf::Color::White);
+                fullScreenRect.setFillColor(sf::Color::White);
                 fullScreenRect.setTexture(&heatTextureB);
                 win.draw(fullScreenRect);
 
