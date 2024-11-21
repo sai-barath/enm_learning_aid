@@ -48,7 +48,6 @@ void pointCharges() {
         }
     } else {
         draw::eFieldHeatMap(charges);
-        win.display();
     }
 }
 

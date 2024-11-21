@@ -222,10 +222,10 @@ namespace draw {
                 double mag = E.magnitude() / 10;
                 if(mag > 255) mag = 255;
                 pixels[index] = static_cast<sf::Uint8>(mag); // set red channel
-                std::cout << "Inserting " << mag << std::endl;
+                // std::cout << "Inserting " << mag << std::endl;
                 pixels[index + 1] = 0;       
                 pixels[index + 2] = static_cast<sf::Uint8>(255 - mag);   
-                pixels[index + 3] = 100;
+                pixels[index + 3] = 255;
             }
         }
         std::clock_t end = clock();
@@ -253,7 +253,7 @@ namespace draw {
         sf::RectangleShape fullScreenRect(sf::Vector2f(1280, 720));
         fullScreenRect.setFillColor(sf::Color::White);
         fullScreenRect.setTexture(&heatTexture);
-        while (win.isOpen()) {
+        while(win.isOpen()) {
             sf::Event event;
             while (win.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
