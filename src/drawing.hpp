@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <float.h>
 
 namespace draw {
     /**
@@ -174,26 +175,20 @@ namespace draw {
     }
 
     double computeDistanceFromWire(const vectorR3& pos, const longThinWire& wir) {
-    // p1: A point on the wire (you can use the wire's starting point)
-    vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
-
-    // p2: The position of the vector (pos in this case)
-    vectorR3 p2 = pos;
-
-    // d: The direction vector of the wire
-    vectorR3 d = wir.direction;
-
-    // Compute the vector from p1 to p2
-    vectorR3 p1_to_p2 = p2 - p1;
-
-    // Compute the cross product of d and (p2 - p1)
-    vectorR3 crossProduct = d.cross(p1_to_p2);
-
-    // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
-    double distance = crossProduct.magnitude() / d.magnitude();
-
-    return distance;
-}
+        // p1: A point on the wire (you can use the wire's starting point)
+        vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+        // p2: The position of the vector (pos in this case)
+        vectorR3 p2 = pos;
+        // d: The direction vector of the wire
+        vectorR3 d = wir.direction;
+        // Compute the vector from p1 to p2
+        vectorR3 p1_to_p2 = p2 - p1;
+        // Compute the cross product of d and (p2 - p1)
+        vectorR3 crossProduct = d.cross(p1_to_p2);
+        // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
+        double distance = crossProduct.magnitude() / d.magnitude();
+        return distance;
+    }
 
     /**
      * Draw a set of charges and their associated electric field magnitudes (heat map)
@@ -211,16 +206,34 @@ namespace draw {
         heatTexture.create(winX, winY);
         // Create a RGBA pixel array (4 components) for the texture, use just the red channel for heat values
         std::vector<sf::Uint8> pixels(winSize * 4);
+        std::vector<double> rawVals(winSize);
+        double max = -1.0, min = DBL_MAX;
         for (int y = 0; y < winY; y++) {
             for (int x = 0; x < winX; x++) {
-                int index = (y * winX  + x) * 4;
+                int index = (y * winX  + x);
                 vectorR3 pos(x, win.getSize().y - y, 0);
                 vectorR3 E = charges[0].efield(pos);
                 for(size_t i = 1; i < charges.size(); i++) {
                     E += charges[i].efield(pos);
                 }
-                double mag = E.magnitude() / 10;
-                if(mag > 255) mag = 255;
+                double mag = E.magnitude();
+                rawVals[index] = mag;
+                if(mag > max) {
+                    max = mag;
+                }
+                if(mag < min) {
+                    min = mag;
+                }
+            }
+        }
+        std::cout << max << std::endl << min << std::endl;
+        for (int y = 0; y < winY; y++) {
+            for (int x = 0; x < winX; x++) {
+                int rawIndex = (y * winX  + x);
+                int index = (y * winX  + x) * 4;
+                double raw = rawVals[rawIndex];
+                double mag = ((raw - min) / (max - min)) * 255.0;
+                std::cout << mag << std::endl;
                 pixels[index] = static_cast<sf::Uint8>(mag); // set red channel
                 // std::cout << "Inserting " << mag << std::endl;
                 pixels[index + 1] = 0;       
