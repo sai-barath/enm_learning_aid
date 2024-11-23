@@ -297,8 +297,8 @@ namespace draw {
 
         //Draws every node in the grid representing the magnetic field
         if (mode == 1) {
-            for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / (1280 / d))) {
-                for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y / (720 / d))) {
+            for (double i = 0.0; i < win.getSize().x; i += (win.getSize().x / d)) {
+                for (double j = 0.0; j < win.getSize().y; j += (win.getSize().y  / d)) {
                     vectorR3 pos(i, j, 0);
                     vectorR3 bField = wir.computeBField(pos);
                     //std::cout << "(" << pos.xComponent << ", " << pos.yComponent << "): " << bField << std::endl;
