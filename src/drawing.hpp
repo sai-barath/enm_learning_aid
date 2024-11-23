@@ -320,7 +320,7 @@ namespace draw {
                         double bMagnitude = bField.magnitude() * 1e9;
                         if (bMagnitude > 255) bMagnitude = 255;
                         pixels[pixel_index] = static_cast<sf::Uint8>(255 - bMagnitude);
-                        std::cout << "Inserting " << bMagnitude << std::endl;
+                        // std::cout << "Inserting " << bMagnitude << std::endl;
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255);
                         pixels[pixel_index + 3] = 255;
@@ -328,7 +328,7 @@ namespace draw {
                         double bMagnitude = bField.magnitude() * 1e9;
                         if (bMagnitude > 255) bMagnitude = 255;
                         pixels[pixel_index] = static_cast<sf::Uint8>(255);
-                        std::cout << "Inserting " << bMagnitude << std::endl;
+                        // std::cout << "Inserting " << bMagnitude << std::endl;
                         pixels[pixel_index + 1] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 2] = static_cast<sf::Uint8>(255 - bMagnitude);
                         pixels[pixel_index + 3] = 255;
