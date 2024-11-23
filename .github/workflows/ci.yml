@@ -38,3 +38,7 @@ jobs:
               run: cmake -B build
             - name: Finish Build
               run: cmake --build build
+            - uses: actions/upload-artifact@v4
+              with:
+                name: mac_executable
+                path: build/Debug/enm_learning_aid.bin
