@@ -477,7 +477,7 @@ namespace draw {
             // Draw wire and display b-field if enough vertices
             int numVert = wir.vertices.size();
             for(int i = 0; i < wir.vertices.size(); i++) {
-                sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, win.getSize().y - wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, win.getSize().y - wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
+                sf::Vertex wirSeg[] = {sf::Vertex(sf::Vector2f(wir.vertices[i].xComponent, wir.vertices[i].yComponent), sf::Color::Black), sf::Vertex(sf::Vector2f(wir.vertices[(i + 1) % numVert].xComponent, wir.vertices[(i + 1) % numVert].yComponent), sf::Color::Black)};
                 win.draw(wirSeg, 2, sf::Lines);
             }
             if (mode == 1) {
