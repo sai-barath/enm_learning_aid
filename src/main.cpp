@@ -99,7 +99,7 @@ void vertexWire() {
         x_size = (win.getSize().x / 100) + 1;
         y_size = (win.getSize().y / 100) + 1;
     }
-    std::vector<std::vector<double>> cache(x_size, std::vector<double>(y_size));
+    std::vector<std::vector<double> > cache(x_size, std::vector<double>(y_size));
     wireOfVertices wir(curr);
     win.clear(sf::Color::White);
     while (win.isOpen()) {
