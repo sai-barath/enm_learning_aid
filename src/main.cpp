@@ -116,16 +116,41 @@ void vertexWire() {
     }
 }
 
+void rod() {
+    //TODO: prompt for user input
+    sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
+    win.setFramerateLimit(60);
+    
+    while (win.isOpen()) {
+        win.clear(sf::Color::White);
+        sf::Event e;
+        while (win.pollEvent(e)) {
+            if (e.type == sf::Event::Closed) {
+                win.close();
+            }
+        }
+        draw::drawCustomRod(win);
+        win.display();
+    }
+}
+
 int main() {
-    std::cout << "Pick one: " << std::endl << "(1) Point charges" << std::endl << "(2) B-fields" << std::endl << "(3) Wire of vertices" << std::endl; 
+    std::cout << "Pick one: " 
+    << std::endl << "(1) Point charges"
+    << std::endl << "(2) B-fields"
+    << std::endl << "(3) Wire of vertices"
+    << std::endl << "(4) Rod"
+    << std::endl; 
     int choice = -1;
     std::cin >> choice;
-    if(choice == 1) {
+    if (choice == 1) {
         pointCharges();
-    } else if(choice == 2) {
+    } else if (choice == 2) {
         drawB();
-    } else if(choice == 3) {
+    } else if (choice == 3) {
         vertexWire();
+    } else if (choice == 4) {
+        rod();  
     } else {
         return 1;
     }

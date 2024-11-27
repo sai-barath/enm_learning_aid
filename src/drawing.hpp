@@ -5,6 +5,7 @@
 #include "drawing.hpp"
 #include "pointCharge.hpp"
 #include "bField.hpp"
+#include "rod.hpp"
 #include "vertexWire.hpp"
 #include <cmath>
 #include <iostream>
@@ -174,26 +175,26 @@ namespace draw {
     }
 
     double computeDistanceFromWire(const vectorR3& pos, const longThinWire& wir) {
-    // p1: A point on the wire (you can use the wire's starting point)
-    vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+        // p1: A point on the wire (you can use the wire's starting point)
+        vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
 
-    // p2: The position of the vector (pos in this case)
-    vectorR3 p2 = pos;
+        // p2: The position of the vector (pos in this case)
+        vectorR3 p2 = pos;
 
-    // d: The direction vector of the wire
-    vectorR3 d = wir.direction;
+        // d: The direction vector of the wire
+        vectorR3 d = wir.direction;
 
-    // Compute the vector from p1 to p2
-    vectorR3 p1_to_p2 = p2 - p1;
+        // Compute the vector from p1 to p2
+        vectorR3 p1_to_p2 = p2 - p1;
 
-    // Compute the cross product of d and (p2 - p1)
-    vectorR3 crossProduct = d.cross(p1_to_p2);
+        // Compute the cross product of d and (p2 - p1)
+        vectorR3 crossProduct = d.cross(p1_to_p2);
 
-    // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
-    double distance = crossProduct.magnitude() / d.magnitude();
+        // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
+        double distance = crossProduct.magnitude() / d.magnitude();
 
-    return distance;
-}
+        return distance;
+    }
 
     /**
      * Draw a set of charges and their associated electric field magnitudes (heat map)
@@ -582,6 +583,64 @@ namespace draw {
                 win.draw(dot);
             }
             
+        }
+    }
+
+    void drawCustomRod(sf::RenderWindow& win, double thickness = 1, double length = 1) {
+        const float centerX = win.getSize().x / 2.f;
+        const float centerY = win.getSize().y / 2.f;
+        
+        //scale the magnet dimensions based on parameters
+        const float magnetLength = 200.f * length;
+        const float magnetThickness = 60.f * thickness;
+        const float halfLength = magnetLength / 2.f;
+
+        //field line variables
+        const int numLines = 16;
+        const float maxHeight = magnetLength * 1.5f;
+        
+        std::vector<std::vector<sf::Vertex> > fieldLines;
+        
+        //generate field lines
+        for (int i = 0; i < numLines; i++) {
+
+        }
+
+        //draw gradient
+        int gradientSteps = 100;
+        for (int i = 0; i < gradientSteps; ++i) {
+            sf::RectangleShape gradient;
+            gradient.setSize(sf::Vector2f(halfLength * 2, magnetThickness / gradientSteps));
+            gradient.setOrigin(0.f, magnetThickness / 2.f);
+
+            //gradient top half
+            gradient.setPosition(centerX - halfLength, centerY - magnetThickness / 2.f + i * (magnetThickness / gradientSteps));
+            float mix = static_cast<float>(i) / (gradientSteps - 1);
+            sf::Color gradientColor = sf::Color(
+                static_cast<sf::Uint8>(255 * sqrt(1 - mix)),
+                255,
+                255
+            );
+            gradient.setFillColor(gradientColor);
+            win.draw(gradient);
+            
+            //gradient bottom half
+            gradient.setPosition(centerX - halfLength, centerY + magnetThickness / 2.f - i * (magnetThickness / gradientSteps));
+            gradientColor = sf::Color(
+                static_cast<sf::Uint8>(255 * sqrt(1 - mix)),
+                255,
+                255
+            );
+            gradient.setFillColor(gradientColor);
+            win.draw(gradient);
+        }
+
+        //draw field lines
+        for (size_t i = 0; i < fieldLines.size(); ++i) {
+            const std::vector<sf::Vertex>& line = fieldLines[i];
+            if (!line.empty()) {
+                win.draw(&line[0], line.size(), sf::LineStrip);
+            }
         }
     }
 };
