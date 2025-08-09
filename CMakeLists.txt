@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
+SET(GLM_INCLUDE_DIR "$ENV{GLM_INCLUDE_DIR}")
+INCLUDE_DIRECTORIES(${GLM_INCLUDE_DIR})
 project(enm_learning_aid)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 include(FetchContent)

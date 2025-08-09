@@ -10,6 +10,8 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <thread>
+#include <functional>
 
 namespace draw {
     /**
@@ -174,26 +176,45 @@ namespace draw {
     }
 
     double computeDistanceFromWire(const vectorR3& pos, const longThinWire& wir) {
-    // p1: A point on the wire (you can use the wire's starting point)
-    vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+        // p1: A point on the wire (you can use the wire's starting point)
+        vectorR3 p1(0, 0, 0);  // Assuming the wire starts at (0, 0)
+        // p2: The position of the vector (pos in this case)
+        vectorR3 p2 = pos;
+        // d: The direction vector of the wire
+        vectorR3 d = wir.direction;
+        // Compute the vector from p1 to p2
+        vectorR3 p1_to_p2 = p2 - p1;
+        // Compute the cross product of d and (p2 - p1)
+        vectorR3 crossProduct = d.cross(p1_to_p2);
+        // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
+        double distance = crossProduct.magnitude() / d.magnitude();
+        return distance;
+    }
 
-    // p2: The position of the vector (pos in this case)
-    vectorR3 p2 = pos;
+  
 
-    // d: The direction vector of the wire
-    vectorR3 d = wir.direction;
+    struct HeatMapRunner {
+        void operator()(const std::vector<pointCharge>& charges, std::vector<sf::Uint8>& pixels, int startY, int endY, const int winX, const int winY) {
+            for (int y = startY; y <= endY; ++y) {
+                for (int x = 0; x < winX; ++x) {
+                    int index = (y * winX  + x) * 4;
+                    vectorR3 pos(x, winY - y, 0);
+                    vectorR3 E = charges[0].efield(pos);
+                    for(size_t i = 1; i < charges.size(); i++) {
+                        E += charges[i].efield(pos);
+                    }
+                    double mag = E.magnitude() / 10;
+                    if(mag > 255) mag = 255;
+                    pixels[index] = static_cast<sf::Uint8>(mag); // set red channel
+                    // std::cout << "Inserting " << mag << std::endl;
+                    pixels[index + 1] = 0;       
+                    pixels[index + 2] = static_cast<sf::Uint8>(255 - mag);   
+                    pixels[index + 3] = 255;
+                }
+            }
+        }
+    };
 
-    // Compute the vector from p1 to p2
-    vectorR3 p1_to_p2 = p2 - p1;
-
-    // Compute the cross product of d and (p2 - p1)
-    vectorR3 crossProduct = d.cross(p1_to_p2);
-
-    // Calculate the distance using the formula: |d x (p2 - p1)| / |d|
-    double distance = crossProduct.magnitude() / d.magnitude();
-
-    return distance;
-}
 
     /**
      * Draw a set of charges and their associated electric field magnitudes (heat map)
@@ -202,7 +223,7 @@ namespace draw {
      */
     void eFieldHeatMap(std::vector<pointCharge>& charges) {
         sf::RenderWindow win(sf::VideoMode(1280, 720), "E&M Learning Aid", sf::Style::Default, sf::ContextSettings(0, 0, 2));
-        std::clock_t start = clock();
+        
         const int winX = win.getSize().x;
         const int winY = win.getSize().y;
         const int winSize = winX * winY;
@@ -211,45 +232,39 @@ namespace draw {
         heatTexture.create(winX, winY);
         // Create a RGBA pixel array (4 components) for the texture, use just the red channel for heat values
         std::vector<sf::Uint8> pixels(winSize * 4);
-        for (int y = 0; y < winY; y++) {
-            for (int x = 0; x < winX; x++) {
-                int index = (y * winX  + x) * 4;
-                vectorR3 pos(x, win.getSize().y - y, 0);
-                vectorR3 E = charges[0].efield(pos);
-                for(size_t i = 1; i < charges.size(); i++) {
-                    E += charges[i].efield(pos);
-                }
-                double mag = E.magnitude() / 10;
-                if(mag > 255) mag = 255;
-                pixels[index] = static_cast<sf::Uint8>(mag); // set red channel
-                // std::cout << "Inserting " << mag << std::endl;
-                pixels[index + 1] = 0;       
-                pixels[index + 2] = static_cast<sf::Uint8>(255 - mag);   
-                pixels[index + 3] = 255;
-            }
-        }
+        std::clock_t start = clock();
+        // for (int y = 0; y < winY; y++) {
+        //     for (int x = 0; x < winX; x++) {
+        //         int index = (y * winX  + x) * 4;
+        //         vectorR3 pos(x, winY - y, 0);
+        //         vectorR3 E = charges[0].efield(pos);
+        //         for(size_t i = 1; i < charges.size(); i++) {
+        //             E += charges[i].efield(pos);
+        //         }
+        //         double mag = E.magnitude() / 10;
+        //         if(mag > 255) mag = 255;
+        //         pixels[index] = static_cast<sf::Uint8>(mag); // set red channel
+        //         // std::cout << "Inserting " << mag << std::endl;
+        //         pixels[index + 1] = 0;       
+        //         pixels[index + 2] = static_cast<sf::Uint8>(255 - mag);   
+        //         pixels[index + 3] = 255;
+        //     }
+        // }
+        std::thread t1(HeatMapRunner{}, std::ref(charges), std::ref(pixels), 0, winY / 4, winX, winY);
+        std::thread t2(HeatMapRunner{}, std::ref(charges), std::ref(pixels), (winY / 4) + 1, winY / 2, winX, winY);
+        std::thread t3(HeatMapRunner{}, std::ref(charges), std::ref(pixels), (winY / 2) + 1, 3 * (winY/ 4), winX, winY);
+        std::thread t4(HeatMapRunner{}, std::ref(charges), std::ref(pixels), 3 * (winY / 4) + 1, winY- 1, winX, winY);
+        std::clock_t start2 = clock();
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
         std::clock_t end = clock();
         double time = ((double) (end - start)) / CLOCKS_PER_SEC;
-        std::cout << "time: " << time << std::endl;
+        double time2 = ((double) (end - start2)) / CLOCKS_PER_SEC;
+        std::cout << "time: " << time << ", time2: " << time2 << std::endl;
         heatTexture.update(pixels.data());
         sf::Shader shader;
-        /*const std::string SHADE = R"(
-            #version 330 core
-
-            in vec2 fragTexCoord;
-            out vec4 FragColor;
-
-            uniform sampler2D heatTexture;
-
-            void main() {
-                float heatValue = texture(heatTexture, fragTexCoord).r;
-                FragColor = vec4(heatValue, 0, 255.0 - heatValue, 0.5);
-            }
-        )";
-        if (!shader.loadFromMemory(SHADE, sf::Shader::Fragment)) {
-            std::cerr << "Can't load shader" << std::endl;
-        }
-        shader.setUniform("heatTexture", heatTexture);*/
         sf::RectangleShape fullScreenRect(sf::Vector2f(1280, 720));
         fullScreenRect.setFillColor(sf::Color::White);
         fullScreenRect.setTexture(&heatTexture);

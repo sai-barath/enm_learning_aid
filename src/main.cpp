@@ -6,6 +6,7 @@
 #include "pointCharge.hpp"
 #include "bField.hpp"
 #include <vector>
+#include <glm/vec3.hpp>
 
 
 void pointCharges() {
@@ -38,11 +39,7 @@ void pointCharges() {
                     win.close();
                 }
             }
-            if(i == 0) {
-                draw::drawElecField(win, charges);
-            } else {
-                draw::drawElecField(win, charges);
-            }
+            draw::drawElecField(win, charges);
             win.display();
             i++;
         }
